@@ -38,7 +38,6 @@ static bool fatal_code_in_progress, fatal_error_code;
 
 static void fatal_code(const int sig)
 {
-
     fatal_error_code = sig;
 
     signal(sig, SIG_DFL);
@@ -90,7 +89,6 @@ static sigset_t signal_full_mask;
 
 void set_fatal_code(void)
 {
-
     sigfillset(&signal_full_mask);
 
     signal(SIGALRM, fatal_code);
@@ -123,8 +121,6 @@ static int signal_block_nest_count;
 
 void block_signals(void)
 {
-
-
     if (!signal_block_nest_count++)
     {
         sigprocmask(SIG_BLOCK, &signal_full_mask, NULL);
@@ -134,7 +130,6 @@ void block_signals(void)
 
 void release_signals(void)
 {
-
     if (!--signal_block_nest_count)
     {
         sigprocmask(SIG_UNBLOCK, &signal_full_mask, NULL);

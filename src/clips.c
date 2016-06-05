@@ -89,7 +89,6 @@ clip_desc *realloc_clip_desc(clip_desc *cd, int n, int64_t size)
 
 void free_clip_desc(clip_desc *cd)
 {
-
     if (!cd)
     {
         return;
@@ -150,7 +149,6 @@ int copy_to_clip(buffer *b, int n, bool cut)
         (b->cur_pos == b->block_start_pos ||
          (b->cur_pos >= ld->line_len && b->block_start_pos >= ld->line_len)))
     {
-
         clip_desc *const new_cd = realloc_clip_desc(cd, n, 0);
         if (!new_cd)
         {
@@ -162,7 +160,6 @@ int copy_to_clip(buffer *b, int n, bool cut)
         }
         return OK;
     }
-
 
     /*  We have two different loops for direct or inverse copying. Making this
         conditional code would be cumbersome, awkward, and definitely inefficient. */
@@ -176,7 +173,6 @@ int copy_to_clip(buffer *b, int n, bool cut)
         chaining = false;
         for (int pass = 0; pass < 2; pass++)
         {
-
             ld = b->cur_line_desc;
 
             for (int64_t i = y; i >= b->block_start_line; i--)
@@ -269,12 +265,10 @@ int copy_to_clip(buffer *b, int n, bool cut)
         chaining = false;
         for (int pass = 0; pass < 2; pass++)
         {
-
             ld = b->cur_line_desc;
 
             for (int64_t i = y; i <= b->block_start_line; i++)
             {
-
                 int64_t start_pos = 0;
 
                 if (i == y)
@@ -372,7 +366,8 @@ int erase_block(buffer *b)
         return MARK_OUT_OF_BUFFER;
     }
 
-    int64_t y = b->cur_line, erase_len = 0;
+    int64_t y = b->cur_line;
+    int64_t erase_len = 0;
     line_desc *ld = b->cur_line_desc;
 
     if (y == b->block_start_line &&
@@ -455,7 +450,6 @@ int erase_block(buffer *b)
 
 int paste_to_buffer(buffer *b, int n)
 {
-
     clip_desc *const cd = get_nth_clip(n);
     if (!cd)
     {
@@ -516,7 +510,6 @@ int copy_vert_to_clip(buffer *b, int n, bool cut)
     if (b->cur_pos == b->block_start_pos ||
         (y == b->block_start_line && b->cur_pos >= ld->line_len && b->block_start_pos >= ld->line_len))
     {
-
         clip_desc *const new_cd = realloc_clip_desc(cd, n, 0);
         if (!new_cd)
         {
@@ -551,12 +544,10 @@ int copy_vert_to_clip(buffer *b, int n, bool cut)
         int64_t clip_len = 0;
         for (int pass = 0; pass < 2; pass++)
         {
-
             ld = b->cur_line_desc;
 
             for (int64_t i = y; i >= b->block_start_line; i--)
             {
-
                 const int64_t start_pos = calc_pos(ld, start_x, b->opt.tab_size, b->encoding);
                 const int64_t len = calc_pos(ld, end_x, b->opt.tab_size, b->encoding) - start_pos;
 
@@ -573,7 +564,6 @@ int copy_vert_to_clip(buffer *b, int n, bool cut)
                         delete_stream(b, ld, i, start_pos, len);
                     }
                 }
-
                 else
                 {
                     clip_len += len + 1;
@@ -614,12 +604,10 @@ int copy_vert_to_clip(buffer *b, int n, bool cut)
         int64_t clip_len = 0;
         for (int pass = 0; pass < 2; pass++)
         {
-
             ld = b->cur_line_desc;
 
             for (int64_t i = y; i <= b->block_start_line; i++)
             {
-
                 const int64_t start_pos = calc_pos(ld, start_x, b->opt.tab_size, b->encoding);
                 const int64_t len = calc_pos(ld, end_x, b->opt.tab_size, b->encoding) - start_pos;
 
@@ -636,7 +624,6 @@ int copy_vert_to_clip(buffer *b, int n, bool cut)
                         delete_stream(b, ld, i, start_pos, len);
                     }
                 }
-
                 else
                 {
                     clip_len += len + 1;
@@ -684,8 +671,6 @@ int copy_vert_to_clip(buffer *b, int n, bool cut)
 
 int erase_vert_block(buffer *b)
 {
-
-
     if (!b->marking)
     {
         return MARK_BLOCK_FIRST;
@@ -755,7 +740,6 @@ int erase_vert_block(buffer *b)
 
 int paste_vert_to_buffer(buffer *b, int n)
 {
-
     line_desc *ld = b->cur_line_desc;
     clip_desc *const cd = get_nth_clip(n);
     if (!cd)
@@ -795,7 +779,8 @@ int paste_vert_to_buffer(buffer *b, int n)
         const int64_t len = strnlen_ne(p, stream_len - (p - stream));
         if (len)
         {
-            uint64_t pos, n;
+            uint64_t pos;
+            uint64_t n;
             for (n = pos = 0; pos < ld->line_len && n < x; pos = next_pos(ld->line, pos, b->encoding))
             {
                 if (ld->line[pos] == '\t')

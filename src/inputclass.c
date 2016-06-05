@@ -40,7 +40,6 @@ const char *input_class_names[INPUT_CLASS_COUNT] =
 
 const char *key_binding[NUM_KEYS] =
 {
-
     /* Control-letter bindings (Ctrl-X)*  0..31  0..1f */
 
     /* ^@ */      MARKVERT_ABBREV,
@@ -58,10 +57,10 @@ const char *key_binding[NUM_KEYS] =
     /* ^k */      EXEC_ABBREV,
     /* ^l */      REFRESH_ABBREV,
     /* ^m */      NULL,
-    /* ^n */ PICK(NEXTPAGE_ABBREV,     PAGEDOWN_ABBREV),
+    /* ^n */      PICK(NEXTPAGE_ABBREV, PAGEDOWN_ABBREV),
     /* ^o */      OPEN_ABBREV,
 
-    /* ^p */ PICK(PREVPAGE_ABBREV,     PAGEUP_ABBREV),
+    /* ^p */      PICK(PREVPAGE_ABBREV, PAGEUP_ABBREV),
     /* ^q */      CLOSEDOC_ABBREV,
     /* ^r */      REPLACE_ABBREV,
     /* ^s */      SAVE_ABBREV,
@@ -332,7 +331,6 @@ const char *key_binding[NUM_KEYS] =
 
 const input_class char_class[256] =
 {
-
     /* Control-letter classes */
 
     /* @ a b c d e f g h i j k l m n o */
@@ -504,7 +502,6 @@ const char meta_prefixed[128][3] =
 
 const char *key_stroke[NUM_KEYS] =
 {
-
     /* Control-letter bindings (Ctrl-X)*  0..31  0..1f */
 
     "^@",

@@ -267,7 +267,9 @@ static int string_output_width(const char *s, int *len, int maxWidth, bool utf8)
     }
     else
     {
-        int width = 0, char_width, l = *len;
+        int width = 0;
+        int char_width;
+        int l = *len;
         if (utf8)
         {
             while (l-- != 0)
@@ -282,7 +284,9 @@ static int string_output_width(const char *s, int *len, int maxWidth, bool utf8)
                 s += utf8len(*s);
             }
         }
-        else while (l-- != 0)
+        else
+        {
+            while (l-- != 0)
             {
                 char_width = output_width(*(s++));
                 if (width + char_width > maxWidth)
@@ -292,6 +296,7 @@ static int string_output_width(const char *s, int *len, int maxWidth, bool utf8)
                 }
                 width += char_width;
             }
+        }
         return width;
     }
 }

@@ -186,7 +186,6 @@ int64_t read_safely(const int fh, void *const buf, const int64_t len)
 
 bool buffer_file_modified(const buffer *b, const char *name)
 {
-
     assert_buffer(b);
 
 #ifdef NE_TEST
@@ -221,7 +220,6 @@ bool buffer_file_modified(const buffer *b, const char *name)
 
 const char *tilde_expand(const char *filename)
 {
-
     static char *expanded_filename;
 
     if (!filename)
@@ -515,7 +513,6 @@ void set_interactive_mode(void)
     /* We enable the keypad, cursor addressing, etc. */
 
     set_terminal_modes();
-
 }
 
 
@@ -525,7 +522,6 @@ void set_interactive_mode(void)
 
 void unset_interactive_mode(void)
 {
-
     /*  We move the cursor on the last line, clear it, and output a CR, so that
         the kernel can track the cursor position. Note that clear_to_eol() can
         move the cursor. */
@@ -563,7 +559,6 @@ void unset_interactive_mode(void)
 
 int64_t calc_width(const line_desc *const ld, const int64_t n, const int tab_size, const encoding_type encoding)
 {
-
     int64_t width = 0;
     for (int64_t pos = 0; pos < n; pos = pos < ld->line_len ? next_pos(ld->line, pos, encoding) : pos + 1)
     {
@@ -896,7 +891,6 @@ bool ne_isword(const int c, const int encoding)
 
 int context_prefix(const buffer *b, char **p, int64_t *prefix_pos)
 {
-
     *prefix_pos = b->cur_pos;
     if (*prefix_pos && *prefix_pos <= b->cur_line_desc->line_len)
     {

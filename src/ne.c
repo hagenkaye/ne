@@ -141,7 +141,6 @@ buffer *new_buffer(void)
 
 int delete_buffer(void)
 {
-
     buffer *nb = (buffer *)cur_buffer->b_node.next, *pb = (buffer *)cur_buffer->b_node.prev;
 
     rem(&cur_buffer->b_node);
@@ -201,7 +200,6 @@ void about()
 
 int main(int argc, char **argv)
 {
-
     char *locale = setlocale(LC_ALL, "");
     for (int i = 0; i < 256; i++)
     {
@@ -239,7 +237,6 @@ int main(int argc, char **argv)
 
     for (int i = 1; i < argc; i++)
     {
-
         /*  Special arguments start with two dashes. If we find one, we
             cancel its entry in argv[], so that it will be skipped when opening
             the specified files. The only exception is +N for skipping to the
@@ -410,13 +407,15 @@ int main(int argc, char **argv)
 
     if (argc > 1)
     {
-
         /*  The first file opened does not need a NEWDOC_A action. Note that
             file loading can be interrupted (wildcarding can sometimes produce
             unwanted results). */
 
-        uint64_t first_line = 0, first_col = 0;
-        bool binary = false, skip_plus = false, read_only = false;
+        uint64_t first_line = 0;
+        uint64_t first_col = 0;
+        bool binary = false;
+        bool skip_plus = false;
+        bool read_only = false;
         stop = false;
 
         for (int i = 1; i < argc && !stop; i++)
@@ -425,7 +424,8 @@ int main(int argc, char **argv)
             {
                 if (argv[i][0] == '+' && !skip_plus)    /* looking for "+", or "+N" or "+N,M"  */
                 {
-                    uint64_t tmp_l = INT64_MAX, tmp_c = 0;
+                    uint64_t tmp_l = INT64_MAX;
+                    uint64_t tmp_c = 0;
                     char *d;
                     errno = 0;
                     if (argv[i][1])
@@ -566,7 +566,6 @@ int main(int argc, char **argv)
 
     while (true)
     {
-
         /*  If we are displaying the "NO WARRANTY" info, we should not refresh the
             window now */
 

@@ -70,7 +70,8 @@ static void search_buff(const buffer *b, char *p, const int encoding, const bool
 
     for (line_desc *ld = (line_desc *)b->line_desc_list.head, *next; (next = (line_desc *)ld->ld_node.next); ld = next)
     {
-        int64_t l = 0, r = 0;
+        int64_t l = 0;
+        int64_t r = 0;
         do
         {
             /* find left edge of word */
@@ -126,7 +127,9 @@ static void search_buff(const buffer *b, char *p, const int encoding, const bool
 
 char *autocomplete(char *p, char *req_msg, const int ext, int *const error)
 {
-    int max_len = 0, min_len = INT_MAX, prefix_len = strlen(p);
+    int max_len = 0;
+    int min_len = INT_MAX;
+    int prefix_len = strlen(p);
 
     assert(p);
 

@@ -66,7 +66,9 @@ int binsearch(const char *const s)
 {
     if (num_keys)
     {
-        int l = 0, m = 0, r = num_keys - 1;
+        int l = 0;
+        int m = 0;
+        int r = num_keys - 1;
 
         while (l <= r)
         {
@@ -135,7 +137,6 @@ static void key_set(const char *const cap_string, const int code)
     key[num_keys].string = cap_string;
     key[num_keys].code = code;
     num_keys++;
-
 }
 
 
@@ -485,10 +486,8 @@ int get_key_code(void)
 
     while (true)
     {
-
         if (cur_len)
         {
-
             /*  Something is already in the buffer. last_match is the position
                 we have to check. */
 

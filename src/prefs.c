@@ -51,14 +51,15 @@ static bool saving_global;
 
 const char *extension(const char *const filename)
 {
-
     assert(filename != NULL);
 
     for (int i = strlen(filename); i-- != 0;)
+    {
         if (filename[i] == '.')
         {
             return &filename[i + 1];
         }
+    }
 
     return NULL;
 }
@@ -73,7 +74,6 @@ const char *extension(const char *const filename)
 
 char *exists_prefs_dir(void)
 {
-
     static char *prefs_dir;
 
     /* If we have been already called, we already computed the name. */
@@ -94,7 +94,6 @@ char *exists_prefs_dir(void)
 
     if ((prefs_dir = malloc(strlen(home_dir) + strlen(PREFS_DIR) + 3)))
     {
-
         strcat(strcat(strcpy(prefs_dir, home_dir), "/"), PREFS_DIR);
 
         struct stat s;
@@ -325,7 +324,8 @@ static int do_auto_prefs(buffer *b, const char *ext, int (prefs_func)(buffer *, 
         doesn't override still gets passed through. */
 
     int error = OK;
-    char *auto_name, *prefs_dir;
+    char *auto_name;
+    char  *prefs_dir;
     if (*prefs_func == load_prefs && (prefs_dir = exists_gprefs_dir()))
     {
         if ((auto_name = malloc(strlen(ext) + strlen(prefs_dir) + strlen(PREF_FILE_SUFFIX) + 2)))

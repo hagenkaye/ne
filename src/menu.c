@@ -662,7 +662,6 @@ void reset_status_bar(void)
 
 char *gen_flag_string(const buffer *const b)
 {
-
     static char string[MAX_FLAG_STRING_SIZE];
     const int ch = b->cur_pos < b->cur_line_desc->line_len ? (b->encoding == ENC_UTF8 ? utf8char(&b->cur_line_desc->line[b->cur_pos]) : (unsigned char)b->cur_line_desc->line[b->cur_pos]) : -1;
     int i = 0;
@@ -936,7 +935,6 @@ void print_message(const char *const message)
 
 int print_error(const int error_num)
 {
-
     assert(error_num < ERROR_COUNT);
 
     if (error_num > 0)
@@ -955,7 +953,6 @@ int print_error(const int error_num)
 
 void print_info(const int info_num)
 {
-
     assert(info_num < INFO_COUNT);
 
     print_message(info_msg[info_num]);
@@ -1071,7 +1068,6 @@ void handle_menus(void)
             default:
                 break;
         }
-
     }
 }
 
@@ -1102,7 +1098,6 @@ static void get_menu_conf(const char *menu_conf_name, char *(exists_prefs_func)(
             char_stream *cs;
             if ((cs = load_stream(NULL, menu_conf_name, false, false)) || (cs = load_stream(NULL, menu_conf, false, false)))
             {
-
                 for (int pass = 0; pass < 2; pass++)
                 {
                     char *p = cs->stream;
@@ -1114,10 +1109,8 @@ static void get_menu_conf(const char *menu_conf_name, char *(exists_prefs_func)(
                     {
                         if (*p)
                         {
-
                             if (!cmdcmp(MENU_KEYWORD, p))
                             {
-
                                 if (cur_menu < 0 || num_items_in_menu)
                                 {
                                     cur_menu++;
@@ -1158,7 +1151,6 @@ static void get_menu_conf(const char *menu_conf_name, char *(exists_prefs_func)(
                                 {
                                     error_in_menu_configuration(line - 1, "no items specified for this menu.");
                                 }
-
                             }
                             else if (!cmdcmp(ITEM_KEYWORD, p))
                             {
@@ -1218,7 +1210,6 @@ static void get_menu_conf(const char *menu_conf_name, char *(exists_prefs_func)(
                                 num_items_in_menu++;
                                 cur_item++;
                             }
-
                         }
                         line++;
                         p += strlen(p) + 1;

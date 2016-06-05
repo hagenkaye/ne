@@ -69,7 +69,6 @@ void free_char_stream(char_stream *const cs)
 
 char_stream *realloc_char_stream(char_stream *const cs, const int64_t size)
 {
-
     if (!cs)
     {
         return alloc_char_stream(size);
@@ -104,7 +103,6 @@ char_stream *realloc_char_stream(char_stream *const cs, const int64_t size)
 
 int add_to_stream(char_stream *const cs, const char *const s, const int64_t len)
 {
-
     if (!s)
     {
         return OK;
@@ -174,7 +172,6 @@ int insert_in_stream(char_stream *cs, const char *s, const int64_t pos, const in
 
 int delete_from_stream(char_stream *const cs, const int64_t pos, int64_t len)
 {
-
     if (!len)
     {
         return OK;
@@ -205,7 +202,6 @@ int delete_from_stream(char_stream *const cs, const int64_t pos, int64_t len)
 
 char_stream *reset_stream(char_stream *const cs)
 {
-
     if (!cs)
     {
         return alloc_char_stream(0);
@@ -246,7 +242,6 @@ void set_stream_encoding(char_stream *const cs, const encoding_type source)
 
 char_stream *load_stream(char_stream *cs, const char *name, const bool preserve_cr, const bool binary)
 {
-
     assert_char_stream(cs);
 
     assert(name != NULL);
@@ -376,7 +371,6 @@ int save_stream(const char_stream *const cs, const char *name, const bool CRLF, 
 
 int save_stream_to_fh(const char_stream *const cs, const int fh, const bool CRLF, const bool binary)
 {
-
     if (!cs)
     {
         return ERROR;

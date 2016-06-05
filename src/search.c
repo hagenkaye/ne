@@ -87,7 +87,6 @@ const unsigned char ascii_up_case[256] =
 
 int find(buffer *const b, const char *pattern, const bool skip_first)
 {
-
     bool recompile_string;
 
     if (!pattern)
@@ -106,11 +105,13 @@ int find(buffer *const b, const char *pattern, const bool skip_first)
         return ERROR;
     }
 
-    if (recompile_string) for (int i = 0; i < sizeof d / sizeof * d; i++)
+    if (recompile_string)
+    {
+        for (int i = 0; i < sizeof d / sizeof * d; i++)
         {
             d[i] = m;
         }
-
+    }
     const unsigned char *const up_case = b->encoding == ENC_UTF8 ? ascii_up_case : localised_up_case;
     const bool sense_case = (b->opt.case_search != 0);
     line_desc *ld = b->cur_line_desc;
@@ -119,7 +120,6 @@ int find(buffer *const b, const char *pattern, const bool skip_first)
 
     if (! b->opt.search_back)
     {
-
         if (recompile_string)
         {
             for (int i = 0; i < m - 1; i++)
@@ -134,12 +134,10 @@ int find(buffer *const b, const char *pattern, const bool skip_first)
 
         while (y < b->num_lines && !stop)
         {
-
             assert(ld->ld_node.next != NULL);
 
             if (ld->line_len >= m)
             {
-
                 while ((p - ld->line) < ld->line_len)
                 {
                     const unsigned char c = CONV((unsigned char) * p);
@@ -176,7 +174,6 @@ int find(buffer *const b, const char *pattern, const bool skip_first)
     }
     else
     {
-
         if (recompile_string)
         {
             for (int i = m - 1; i > 0; i--)
@@ -191,15 +188,12 @@ int find(buffer *const b, const char *pattern, const bool skip_first)
 
         while (y >= 0 && !stop)
         {
-
             assert(ld->ld_node.prev != NULL);
 
             if (ld->line_len >= m)
             {
-
                 while ((p - ld->line) >= 0)
                 {
-
                     const unsigned char c = CONV((unsigned char) * p);
                     if (c != first_char)
                     {
@@ -243,7 +237,6 @@ int find(buffer *const b, const char *pattern, const bool skip_first)
 
 int replace(buffer *const b, const int n, const char *const string)
 {
-
     int64_t len;
 
     assert(string != NULL);
@@ -309,7 +302,6 @@ static int map_group[RE_NREGS];
 
 int find_regexp(buffer *const b, const char *regex, const bool skip_first)
 {
-
     const unsigned char *const up_case = b->encoding == ENC_UTF8 ? ascii_up_case : localised_up_case;
     bool recompile_string;
 
@@ -534,7 +526,6 @@ int find_regexp(buffer *const b, const char *regex, const bool skip_first)
             alert();
             return ERROR;
         }
-
     }
 
     b->find_string_changed = 0;
@@ -545,7 +536,6 @@ int find_regexp(buffer *const b, const char *regex, const bool skip_first)
 
     if (! b->opt.search_back)
     {
-
         int64_t start_pos = b->cur_pos + (skip_first ? 1 : 0);
 
         while (y < b->num_lines && !stop)
@@ -568,12 +558,10 @@ int find_regexp(buffer *const b, const char *regex, const bool skip_first)
     }
     else
     {
-
         int64_t start_pos = b->cur_pos + (skip_first ? -1 : 0);
 
         while (y >= 0 && !stop)
         {
-
             assert(ld->ld_node.prev != NULL);
 
             int64_t pos;
@@ -611,7 +599,6 @@ int replace_regexp(buffer *const b, const char *const string)
     char *p, *q, *t = NULL;
     if ((q = p = str_dup(string)))
     {
-
         int len = strlen(p);
 
         while (true)
@@ -703,7 +690,6 @@ int replace_regexp(buffer *const b, const char *const string)
 
             if (re_reg.end[*(unsigned char *)q] - re_reg.start[*(unsigned char *)q])
             {
-
                 char c = t[re_reg.end[*(unsigned char *)q]];
                 t[re_reg.end[*(unsigned char *)q]] = 0;
 

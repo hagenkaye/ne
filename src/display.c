@@ -91,7 +91,6 @@ int highlight_cmp(HIGHLIGHT_STATE *x, HIGHLIGHT_STATE *y)
 
 void update_syntax_states(buffer *b, int row, line_desc *ld, line_desc *end_ld)
 {
-
     if (b->syn && need_attr_update)
     {
         bool got_end_ld = end_ld == NULL;
@@ -104,7 +103,6 @@ void update_syntax_states(buffer *b, int row, line_desc *ld, line_desc *end_ld)
             end_ld if it is not NULL. In any case, we bail out at the end of the file. */
         for (;;)
         {
-
             /* We move one row down. */
             ld = (line_desc *) ld->ld_node.next;
 
@@ -192,7 +190,9 @@ void output_line_desc(const int row, const int col, line_desc *ld, const int64_t
         col + curr_col - from_col. */
 
     const char *s = ld->line;
-    int64_t curr_col = 0, pos = 0, attr_pos = 0;
+    int64_t curr_col = 0;
+    int64_t pos = 0;
+    int64_t attr_pos = 0;
 
     while (curr_col - from_col < num_cols && pos < ld->line_len)
     {
@@ -965,7 +965,8 @@ void automatch_bracket(buffer *const b, const bool show)
 
     if (show)
     {
-        int64_t match_pos, match_line;
+        int64_t match_pos;
+        int64_t match_line;
         uint32_t tmp_attr;
         line_desc *matching_ld;
         if (find_matching_bracket(b, b->win_y, b->win_y + ne_lines - 2 >= b->num_lines - 1 ? b->num_lines - 1 : b->win_y + ne_lines - 2,

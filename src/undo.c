@@ -85,7 +85,6 @@ static int cat_undo_step(undo_buffer *const ub, const int64_t line, const int64_
 
 void start_undo_chain(buffer *const b)
 {
-
 #ifdef NE_TEST
     D(fprintf(stderr, "# start_undo_chain: %d -> %d\n", b->link_undos, b->link_undos + 1);)
     D(fprintf(stderr, "#   undo.cur_step: %d; undo.last_step: %d\n", b->undo.cur_step, b->undo.last_step);)
@@ -102,7 +101,6 @@ void start_undo_chain(buffer *const b)
 
 void end_undo_chain(buffer *const b)
 {
-
 #ifdef NE_TEST
     D(fprintf(stderr, "# end_undo_chain: %d -> %d\n", b->link_undos, b->link_undos - 1);)
     D(fprintf(stderr, "#   undo.cur_step: %d; undo.last_step: %d\n", b->undo.cur_step, b->undo.last_step);)
@@ -147,7 +145,6 @@ void fix_last_undo_step(buffer *const b, const int64_t delta)
 
 int add_to_undo_stream(undo_buffer *const ub, const char *const p, const int64_t len)
 {
-
     assert(len > 0);
     assert(ub != NULL);
     assert(ub->cur_step && ub->steps[ub->cur_step - 1].len > 0);
@@ -190,12 +187,12 @@ int add_to_undo_stream(undo_buffer *const ub, const char *const p, const int64_t
 
 void reset_undo_buffer(undo_buffer *const ub)
 {
-    ub->cur_step =
-        ub->last_step =
-            ub->cur_stream =
-                ub->last_stream =
-                    ub->steps_size =
-                        ub->streams_size = 0;
+    ub->cur_step = 0;
+    ub->last_step = 0;
+    ub->cur_stream = 0;
+    ub->last_stream = 0;
+    ub->steps_size = 0;
+    ub->streams_size = 0;
     ub->last_save_step = 0;
     free(ub->streams);
     free(ub->steps);
@@ -211,7 +208,6 @@ void reset_undo_buffer(undo_buffer *const ub)
 
 int undo(buffer *const b)
 {
-
     if (!b)
     {
         return -1;
@@ -234,7 +230,6 @@ int undo(buffer *const b)
 #endif
     do
     {
-
         b->undo.cur_step--;
 
         if (b->undo.steps[b->undo.cur_step].len)
@@ -253,7 +248,6 @@ int undo(buffer *const b)
                 insert_stream(b, b->cur_line_desc, b->cur_line, b->cur_pos, b->undo.streams + (b->undo.cur_stream -= b->undo.steps[b->undo.cur_step].len), b->undo.steps[b->undo.cur_step].len);
                 update_syntax_and_lines(b, b->cur_line_desc, end_ld);
             }
-
         }
 
 #ifdef NE_TEST
@@ -273,7 +267,6 @@ int undo(buffer *const b)
 
 int redo(buffer *const b)
 {
-
     if (!b)
     {
         return -1;

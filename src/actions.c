@@ -81,7 +81,8 @@ int do_action(buffer *b, action a, int64_t c, char *p)
     static char msg[MAX_MESSAGE_SIZE];
     line_desc *next_ld;
     HIGHLIGHT_STATE next_line_state;
-    int error = OK, recording;
+    int error = OK;
+    int recording;
     int64_t col;
     char *q;
 
@@ -538,7 +539,8 @@ int do_action(buffer *b, action a, int64_t c, char *p)
         case INSERTCHAR_A:
         {
             static int last_inserted_char = ' ';
-            int deleted_char, old_char;
+            int deleted_char;
+            int old_char;
 
             if (b->opt.read_only)
             {
@@ -1578,7 +1580,8 @@ int do_action(buffer *b, action a, int64_t c, char *p)
 
         case UTF8_A:
         {
-            const encoding_type old_encoding = b->encoding, encoding = detect_buffer_encoding(b);
+            const encoding_type old_encoding = b->encoding;
+            const encoding_type encoding = detect_buffer_encoding(b);
 
             if ((c < 0 && b->encoding != ENC_UTF8) || c > 0)
             {
@@ -1967,9 +1970,12 @@ int do_action(buffer *b, action a, int64_t c, char *p)
 
             if (p || (p = request_string("Filter", NULL, false, COMPLETE_FILE, b->encoding == ENC_UTF8 || (b->encoding == ENC_ASCII && b->opt.utf8auto))))
             {
-                int fin = -1, fout = -1;
+                int fin = -1;
+                int fout = -1;
 
-                char tmpnam1[strlen(P_tmpdir) + strlen(NE_TMP) + 2], tmpnam2[strlen(P_tmpdir) + strlen(NE_TMP) + 2], *command;
+                char tmpnam1[strlen(P_tmpdir) + strlen(NE_TMP) + 2];
+                char tmpnam2[strlen(P_tmpdir) + strlen(NE_TMP) + 2];
+                char  *command;
 
                 strcat(strcat(strcpy(tmpnam1, P_tmpdir), "/"), NE_TMP);
                 strcat(strcat(strcpy(tmpnam2, P_tmpdir), "/"), NE_TMP);
@@ -1983,17 +1989,14 @@ int do_action(buffer *b, action a, int64_t c, char *p)
                 }
                 if (fin != -1 && fout != -1)
                 {
-
                     realloc_clip_desc(get_nth_clip(INT_MAX), INT_MAX, 0);
 
                     if (!b->marking || !(error = (b->mark_is_vertical ? copy_vert_to_clip : copy_to_clip)(b, INT_MAX, false)))
                     {
-
                         if (!(error = save_clip(INT_MAX, tmpnam1, b->is_CRLF, b->opt.binary)))
                         {
                             if ((command = malloc(strlen(p) + strlen(tmpnam1) + strlen(tmpnam2) + 16)))
                             {
-
                                 strcat(strcat(strcat(strcat(strcat(strcpy(command, "( "), p), " ) <"), tmpnam1), " >"), tmpnam2);
 
                                 unset_interactive_mode();
@@ -2005,10 +2008,8 @@ int do_action(buffer *b, action a, int64_t c, char *p)
 
                                 if (!error)
                                 {
-
                                     if (!(error = load_clip(INT_MAX, tmpnam2, b->opt.preserve_cr, b->opt.binary)))
                                     {
-
                                         start_undo_chain(b);
 
                                         if (b->marking)

@@ -28,7 +28,8 @@
 
 int64_t utf8strlen(const char *const s, const int64_t len)
 {
-    int64_t i = 0, l = 0;
+    int64_t i = 0;
+    int64_t l = 0;
     while (i < len)
     {
         assert(utf8len(s[i]) >= 0);

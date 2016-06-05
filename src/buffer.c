@@ -54,7 +54,8 @@
 encoding_type detect_buffer_encoding(const buffer *const b)
 {
     line_desc *ld = (line_desc *)b->line_desc_list.head, *next;
-    encoding_type encoding = ENC_ASCII, e;
+    encoding_type encoding = ENC_ASCII;
+    encoding_type e;
 
     while ((next = (line_desc *)ld->ld_node.next))
     {
@@ -214,7 +215,6 @@ buffer *alloc_buffer(const buffer *const cur_b)
 
     if ((b = calloc(1, sizeof(buffer))))
     {
-
         new_list(&b->line_desc_pool_list);
         new_list(&b->line_desc_list);
         new_list(&b->char_pool_list);
@@ -222,20 +222,18 @@ buffer *alloc_buffer(const buffer *const cur_b)
         b->cur_macro = alloc_char_stream(0);
         b->opt.tab_size = 8;
 
-        b->opt.insert         =
-            b->opt.tabs           =
-                b->opt.shift_tabs     =
-                    b->opt.automatch      =
-                        b->opt.do_undo        =
-                            b->opt.auto_prefs     = 1;
-
+        b->opt.insert = 1;
+        b->opt.tabs = 1;
+        b->opt.shift_tabs = 1;
+        b->opt.automatch = 1;
+        b->opt.do_undo = 1;
+        b->opt.auto_prefs = 1;
         b->opt.utf8auto = io_utf8;
 
         b->attr_len = -1;
 
         if (cur_b)
         {
-
             b->opt.cur_clip       = cur_b->opt.cur_clip;
             b->opt.tab_size       = cur_b->opt.tab_size;
             b->opt.tabs           = cur_b->opt.tabs;
@@ -258,7 +256,6 @@ buffer *alloc_buffer(const buffer *const cur_b)
             b->opt.binary         = cur_b->opt.binary;
             b->opt.utf8auto       = cur_b->opt.utf8auto;
             b->opt.visual_bell    = cur_b->opt.visual_bell;
-
         }
         /*  This leaves out onlyopt.read_only and opt.search_back, which are
             implicitly set to 0 by the calloc(). */
@@ -275,7 +272,6 @@ buffer *alloc_buffer(const buffer *const cur_b)
 
 void free_buffer_contents(buffer *const b)
 {
-
     if (!b)
     {
         return;
@@ -411,10 +407,12 @@ buffer *get_buffer_named(const char *p)
     p = file_part(p);
 
     for (buffer *b = (buffer *)buffers.head; b->b_node.next; b = (buffer *)b->b_node.next)
+    {
         if (b->filename && !strcmp(file_part(b->filename), p))
         {
             return b;
         }
+    }
 
     return NULL;
 }
@@ -425,10 +423,12 @@ buffer *get_buffer_named(const char *p)
 int modified_buffers(void)
 {
     for (buffer *b = (buffer *)buffers.head; b->b_node.next; b = (buffer *)b->b_node.next)
+    {
         if (b->is_modified)
         {
             return true;
         }
+    }
 
     return false;
 }
@@ -443,6 +443,7 @@ int save_all_modified_buffers(void)
     int rc = 0;
 
     for (buffer *b = (buffer *)buffers.head; b->b_node.next; b = (buffer *)b->b_node.next)
+    {
         if (b->is_modified)
         {
             if (buffer_file_modified(b, NULL))
@@ -454,6 +455,7 @@ int save_all_modified_buffers(void)
                 rc = ERROR;
             }
         }
+    }
     return rc;
 }
 
@@ -478,12 +480,10 @@ line_desc *alloc_line_desc(buffer *const b)
     line_desc_pool *ldp;
     for (ldp = (line_desc_pool *)b->line_desc_pool_list.head; ldp->ldp_node.next; ldp = (line_desc_pool *)ldp->ldp_node.next)
     {
-
         assert_line_desc_pool(ldp);
 
         if (ldp->free_list.head->next)
         {
-
             line_desc *const ld = (line_desc *)ldp->free_list.head;
 
             rem(&ld->ld_node);
@@ -591,7 +591,6 @@ char *alloc_chars(buffer *const b, const int64_t len)
 
         if (cp->first_used >= len)
         {
-
             cp->first_used -= len;
             b->free_chars -= len;
 
@@ -606,7 +605,6 @@ char *alloc_chars(buffer *const b, const int64_t len)
         }
         else if (cp->size - cp->last_used > len)
         {
-
             cp->last_used += len;
             b->free_chars -= len;
 
@@ -658,7 +656,6 @@ char *alloc_chars(buffer *const b, const int64_t len)
 
 int64_t alloc_chars_around(buffer *const b, line_desc *const ld, const int64_t n, const bool check_first_before)
 {
-
     assert(ld->line != NULL);
 
     char_pool *cp = get_char_pool(b, ld->line);
@@ -740,14 +737,20 @@ void free_chars(buffer *const b, char *const p, const int64_t len)
     memset(p, 0, len);
     b->free_chars += len;
 
-    if (p == &cp->pool[cp->first_used]) while (cp->first_used <= cp->last_used && !cp->pool[cp->first_used])
+    if (p == &cp->pool[cp->first_used])
+    {
+        while (cp->first_used <= cp->last_used && !cp->pool[cp->first_used])
         {
             cp->first_used++;
         }
-    if (p + len - 1 == &cp->pool[cp->last_used]) while (!cp->pool[cp->last_used] && cp->first_used <= cp->last_used)
+    }
+    if (p + len - 1 == &cp->pool[cp->last_used])
+    {
+        while (!cp->pool[cp->last_used] && cp->first_used <= cp->last_used)
         {
             cp->last_used--;
         }
+    }
 
     if (cp->last_used < cp->first_used)
     {
@@ -840,7 +843,6 @@ int undelete_line(buffer *const b)
 
 void delete_to_eol(buffer *const b, line_desc *const ld, const int64_t line, const int64_t pos)
 {
-
     if (!ld || pos >= ld->line_len)
     {
         return;
@@ -884,7 +886,6 @@ int insert_stream(buffer *const b, line_desc *ld, int64_t line, int64_t pos, con
         int64_t const len = strnlen_ne(s, stream_len - (s - stream));
         if (len)
         {
-
             /*  First case; there is no character allocated on this line. We
                 have to freshly allocate the line. */
 
@@ -901,7 +902,6 @@ int insert_stream(buffer *const b, line_desc *ld, int64_t line, int64_t pos, con
                     return OUT_OF_MEMORY;
                 }
             }
-
 
             /*  Second case. There are not enough characters around ld->line. Note
                 that the value of the check_first_before parameter depends on
@@ -969,7 +969,6 @@ int insert_stream(buffer *const b, line_desc *ld, int64_t line, int64_t pos, con
 
             if ((new_ld = alloc_line_desc(b)))
             {
-
                 add(&new_ld->ld_node, &ld->ld_node);
                 b->num_lines++;
 
@@ -1066,7 +1065,6 @@ int insert_one_char(buffer *const b, line_desc *const ld, const int64_t line, co
 
 int insert_spaces(buffer *const b, line_desc *const ld, const int64_t line, const int64_t pos, int64_t n)
 {
-
     static char spaces[MAX_STACK_SPACES];
     int result = OK, i;
 
@@ -1173,7 +1171,8 @@ int delete_stream(buffer *const b, line_desc *const ld, const int64_t line, cons
             }
             else
             {
-                int64_t n, m;
+                int64_t n;
+                int64_t m;
                 if ((n = alloc_chars_around(b, ld, next_ld->line_len, false)) < 0 && (m = alloc_chars_around(b, next_ld, ld->line_len, true)) < 0)
                 {
                     /*  We try to allocate characters around one line or the other
@@ -1570,6 +1569,7 @@ int load_fh_in_buffer(buffer *b, int fh)
 
     int64_t num_lines;
     for (int64_t i = num_lines = 0; i < len; i++, p++)
+    {
         if ((!b->opt.binary && (*p == terminators[0] || *p == terminators[1])) || !*p)
         {
             if (i < len - 1 && !b->opt.preserve_cr && p[0] == '\r' && p[1] == '\n')
@@ -1581,6 +1581,7 @@ int load_fh_in_buffer(buffer *b, int fh)
             num_lines++;
             b->free_chars++;
         }
+    }
 
     num_lines++;
 
@@ -1653,10 +1654,7 @@ int load_fh_in_buffer(buffer *b, int fh)
             }
         }
 
-
         ldp->allocated_items = num_lines;
-
-
 
         /*  We set correctly the offsets of the first and last character used. If no
             character is used (i.e., we have a file of line feeds), the char pool is
@@ -1782,20 +1780,19 @@ int save_buffer_to_file(buffer *b, const char *name)
     const int fh = open(name, WRITE_FLAGS, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
     if (fh >= 0)
     {
-
         /*  If we can allocate SAVE_BLOCK_LEN bytes, we will use
             them as a buffer for our saves. */
 
         char *const p = malloc(SAVE_BLOCK_LEN + 1);
         if (p)
         {
-
             /*  used keeps track of the number of bytes used in the buffer. l, len
                 specify the pointer to the block of characters to save, and
                 its length. In case of very long lines, or buffer border crossing,
                 they could point in the middle of a line descriptor. */
 
-            int64_t used = 0, len;
+            int64_t used = 0;
+            int64_t len;
             char *l;
 
             while (ld->ld_node.next)
@@ -1876,12 +1873,9 @@ int save_buffer_to_file(buffer *b, const char *name)
         }
         else
         {
-
             /* If the buffer is not available, just save line by line. */
-
             while (ld->ld_node.next)
             {
-
                 if (ld->line)
                 {
                     if (write(fh, ld->line, ld->line_len) < ld->line_len)

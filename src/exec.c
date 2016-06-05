@@ -89,7 +89,6 @@ void add(node *n, node *pos)
 
 void free_list(list *l, void (func)())
 {
-
     node *n1 = l->head, *n2;
 
     while (n1->next)

@@ -166,7 +166,6 @@ int64_t request_number(const char *const prompt, const int64_t default_value)
 
 char *request_string(const char *const prompt, const char *const default_string, const bool accept_null_string, const int completion_type, const bool prefer_utf8)
 {
-
     const char *const result = request(prompt, default_string, true, completion_type, prefer_utf8);
 
     if (result && (*result || accept_null_string))
@@ -320,7 +319,8 @@ static void input_refresh(void)
 
 static void input_autocomplete(void)
 {
-    int dx = 0, prefix_pos = pos;
+    int dx = 0;
+    int prefix_pos = pos;
     char *p;
 
     /* find a usable prefix */
@@ -414,7 +414,6 @@ static void input_move_left(const bool do_refresh)
 {
     if (pos > 0)
     {
-
         const int x_delta = get_char_width(&input_buffer[pos = prev_pos(input_buffer, pos, encoding)], encoding);
 
         assert(pos >= 0);
@@ -425,7 +424,8 @@ static void input_move_left(const bool do_refresh)
 
             if (char_ins_del_ok)
             {
-                int i, j;
+                int i;
+                int j;
                 for (i = start_x, j = offset; j < len && i + get_char_width(&input_buffer[j], encoding) < ne_columns; i += get_char_width(&input_buffer[j], encoding), j = next_pos(input_buffer, j, encoding));
                 if (j < len)
                 {
@@ -478,7 +478,8 @@ static void input_move_right(const bool do_refresh)
 
             if (char_ins_del_ok)
             {
-                int i, j;
+                int i;
+                int j;
                 move_cursor(ne_lines - 1, start_x);
                 delete_chars(width);
                 move_cursor(ne_lines - 1, x - x_delta);
@@ -625,7 +626,6 @@ static void input_paste(void)
 
 char *request(const char *prompt, const char *const default_string, const bool alpha_allowed, const int completion_type, const bool prefer_utf8)
 {
-
     set_attr(0);
 
     input_buffer[pos = len = offset = 0] = 0;
@@ -646,7 +646,6 @@ char *request(const char *prompt, const char *const default_string, const bool a
 
     while (true)
     {
-
         assert(input_buffer[len] == 0);
 
         move_cursor(ne_lines - 1, x);
@@ -676,13 +675,11 @@ char *request(const char *prompt, const char *const default_string, const bool a
 
         switch (ic)
         {
-
             case INVALID:
                 alert();
                 break;
 
             case ALPHA:
-
                 if (first_char_typed)
                 {
                     input_buffer[len = 0] = 0;
@@ -859,7 +856,6 @@ char *request(const char *prompt, const char *const default_string, const bool a
                 {
                     switch (a)
                     {
-
                         case LINEUP_A:
                         case LINEDOWN_A:
                         case MOVESOF_A:

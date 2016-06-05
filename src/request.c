@@ -473,7 +473,8 @@ static void fuzz_forward(const int c)
 
     if (prune)
     {
-        int i = 0, n1 = 0;
+        int i = 0;
+        int n1 = 0;
         for (int j = 0; j < rl.cur_entries; j++)
         {
             char *const p1 = rl.entries[j];
@@ -573,12 +574,17 @@ static int request_strings_cleanup(bool reordered)
 
 int request_strings(req_list *rlp0, int n)
 {
-
     assert(rlp0->cur_entries > 0);
 
-    int ne_lines0 = 0, ne_columns0 = 0;
+    int ne_lines0 = 0;
+    int ne_columns0 = 0;
     bool reordered = false;
-    max_names_per_line = max_names_per_col = x = y = page = fuzz_len = 0;
+    max_names_per_line = 0;
+    max_names_per_col = 0;
+    x = 0;
+    y = 0;
+    page = 0;
+    fuzz_len = 0;
     if (! request_strings_init(rlp0))
     {
         return ERROR;
@@ -788,7 +794,6 @@ int request_strings(req_list *rlp0, int n)
 
 char *complete_filename(const char *start_prefix)
 {
-
     /*  This might be NULL if the current directory has been unlinked, or it is not readable.
         in that case, we end up moving to the completion directory. */
     char *const cur_dir_name = ne_getcwd(CUR_DIR_MAX_SIZE);
@@ -806,7 +811,8 @@ char *complete_filename(const char *start_prefix)
     }
 
     start_prefix = file_part(start_prefix);
-    bool is_dir, unique = true;
+    bool is_dir;
+    bool unique = true;
     char *cur_prefix = NULL;
     DIR *const d = opendir(CURDIR);
 
@@ -853,7 +859,6 @@ char *complete_filename(const char *start_prefix)
 
 static void load_syntax_names(req_list *rl, DIR *d, int flag)
 {
-
     const int extlen = strlen(SYNTAX_EXT);
     stop = false;
 
@@ -950,7 +955,6 @@ char *request_syntax()
 
 char *request_files(const char *const filename, bool use_prefix)
 {
-
     char *const cur_dir_name = ne_getcwd(CUR_DIR_MAX_SIZE);
     if (!cur_dir_name)
     {
@@ -988,7 +992,6 @@ char *request_files(const char *const filename, bool use_prefix)
         DIR *const d = opendir(CURDIR);
         if (d)
         {
-
             stop = false;
             for (struct dirent * de; !stop && (de = readdir(d));)
             {
@@ -1066,7 +1069,6 @@ char *request_files(const char *const filename, bool use_prefix)
 
 char *request_file(const buffer *b, const char *prompt, const char *default_name)
 {
-
     char *p = NULL;
 
     if (!b->opt.no_file_req)
@@ -1095,7 +1097,6 @@ char *request_file(const buffer *b, const char *prompt, const char *default_name
 
 int request_document(void)
 {
-
     int i = -1;
     req_list rl;
     buffer *b = (buffer *)buffers.head;
@@ -1164,7 +1165,6 @@ int request_document(void)
 
 int req_list_del(req_list *const rl, int nth)
 {
-
     if (nth < 0 || nth >= rl->cur_entries)
     {
         return ERROR;
@@ -1297,7 +1297,8 @@ char *req_list_add(req_list *const rl, char *const str, const int suffix)
     int ins;
     if (rl->cmpfnc)   /* implies the entries are sorted */
     {
-        int l = 0, m = 0;
+        int l = 0;
+        int  m = 0;
         int r = rl->cur_entries - 1;
         while (l <= r)
         {

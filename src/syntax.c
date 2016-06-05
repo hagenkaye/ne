@@ -305,7 +305,8 @@ HIGHLIGHT_STATE parse(struct high_syntax *const syntax, line_desc *const ld, HIG
     /* Una iterazione in più: aggiungo '\n' come ultimo carattere. */
     while (p <= q)    /* On the last itteration, process the virtual '\n' character. */
     {
-        struct high_cmd *cmd, *kw_cmd;
+        struct high_cmd *cmd;
+        struct high_cmd *kw_cmd;
         int x;
 
         if (p == q)
@@ -327,8 +328,6 @@ HIGHLIGHT_STATE parse(struct high_syntax *const syntax, line_desc *const ld, HIG
         }
 
         /* Create or expand attribute array if necessary */
-
-
         if (attr == attr_end)
         {
             if (!attr_buf)
@@ -630,19 +629,23 @@ struct high_color *find_color(struct high_color *colors, unsigned char *name, un
     struct high_color *color;
     joe_snprintf_2(bf, sizeof(bf), "%s.%s", syn, name);
     for (color = colors; color; color = color->next)
+    {
         if (!zcmp(color->name, bf))
         {
             break;
         }
+    }
     if (color)
     {
         return color;
     }
     for (color = colors; color; color = color->next)
+    {
         if (!zcmp(color->name, name))
         {
             break;
         }
+    }
     return color;
 }
 
@@ -789,6 +792,7 @@ void parse_options(struct high_syntax *syntax, struct high_cmd *cmd, FILE *f, un
     unsigned char bf1[256];
 
     while (parse_ws(&p, '#'), !parse_ident(&p, bf, sizeof(bf)))
+    {
         if (!zcmp(bf, USTR "buffer"))
         {
             cmd->start_buffering = 1;
@@ -941,6 +945,7 @@ subr:
         {
             i_printf_2((char *)joe_gettext(_("%s %d: Unknown option\n")), name, line);
         }
+    }
 }
 
 struct ifstack
@@ -1292,10 +1297,12 @@ struct high_syntax *load_syntax_subr(unsigned char *name, unsigned char *subr, s
 
     /* Already loaded? */
     for (syntax = syntax_list; syntax; syntax = syntax->next)
+    {
         if (syntax_match(syntax, name, subr, params))
         {
             return syntax;
         }
+    }
 
     /* Create new one */
     syntax = joe_malloc(sizeof(struct high_syntax));

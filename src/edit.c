@@ -42,10 +42,12 @@ static int to_something(buffer *b, int (to_first)(int), int (to_rest)(int))
     int c;
     /* First of all, we search for the word start, if we're not over it. */
     if (pos >= b->cur_line_desc->line_len || !ne_isword(c = get_char(&b->cur_line_desc->line[pos], b->encoding), b->encoding))
+    {
         if (search_word(b, 1) != OK)
         {
             return ERROR;
         }
+    }
 
     bool changed = false;
     int64_t new_len = 0;
@@ -149,15 +151,13 @@ int capitalize(buffer *b)
 }
 
 
-
-
-
 /*  Finds which bracket matches the bracket under the cursor, and moves it
     there. Various error codes can be returned. */
 
 int match_bracket(buffer *b)
 {
-    int64_t match_line, match_pos;
+    int64_t match_line;
+    int64_t match_pos;
     const int rc = find_matching_bracket(b, 0, b->num_lines - 1, &match_line, &match_pos, NULL, NULL);
     if (rc == OK)
     {
@@ -170,8 +170,9 @@ int match_bracket(buffer *b)
 
 int find_matching_bracket(buffer *b, const int64_t min_line, int64_t max_line, int64_t *match_line, int64_t *match_pos, int *c, line_desc **match_ld)
 {
-
-    static unsigned char bracket_table[NUM_BRACKETS][2] = { { '(', ')' },
+    static unsigned char bracket_table[NUM_BRACKETS][2] =
+    {
+        { '(', ')' },
         { '[', ']' },
         { '{', '}' },
         { '<', '>' },
@@ -185,7 +186,9 @@ int find_matching_bracket(buffer *b, const int64_t min_line, int64_t max_line, i
         return NOT_ON_A_BRACKET;
     }
 
-    int i, j, dir;
+    int i;
+    int j;
+    int dir;
     for (i = 0; i < NUM_BRACKETS; i++)
     {
         for (j = 0; j < 2; j++)
@@ -218,13 +221,11 @@ int find_matching_bracket(buffer *b, const int64_t min_line, int64_t max_line, i
 
     while (ld->ld_node.next && ld->ld_node.prev && y >= min_line && y <= max_line)
     {
-
         if (pos >= 0)
         {
             char *const line = ld->line;
             while (pos >= 0 && pos < ld->line_len)
             {
-
                 if (line[pos] == bracket_table[i][j])
                 {
                     n++;
@@ -296,7 +297,9 @@ int word_wrap(buffer *const b)
 {
     const int64_t len = b->cur_line_desc->line_len;
     char *const line = b->cur_line_desc->line;
-    int64_t cur_pos, pos, first_pos;
+    int64_t cur_pos;
+    int64_t pos;
+    int64_t first_pos;
 
     if (!(cur_pos = pos = b->cur_pos))
     {
@@ -357,7 +360,8 @@ int word_wrap2(buffer *const b)
     bool non_blank_added = false;
     int avshift;
     char *line = b->cur_line_desc->line;
-    int64_t pos, original_line;
+    int64_t pos;
+    int64_t original_line;
 
     /*  If the char to our left is a space, we need to insert
         a non-space to attach our WORDWRAP_BOOKMARK to because
@@ -611,9 +615,7 @@ int paragraph(buffer *const b)
 
     /** Step 1 **/
     if (!(
-            (ld->ld_node.next->next &&
-             save_space((line_desc *)ld->ld_node.next, b->opt.tab_size, b->encoding)
-            )
+            (ld->ld_node.next->next && save_space((line_desc *)ld->ld_node.next, b->opt.tab_size, b->encoding))
             || save_space(ld, b->opt.tab_size, b->encoding)
         )
        )
@@ -632,7 +634,8 @@ int paragraph(buffer *const b)
     delete_stream(b, ld, line, 0, 1);
 
     const int right_margin = b->opt.right_margin ? b->opt.right_margin : ne_columns;
-    bool done = false, skip;
+    bool done = false;
+    bool skip;
     int64_t pos;
     do
     {
@@ -843,14 +846,12 @@ int paragraph(buffer *const b)
 
 int center(buffer *const b)
 {
-
     line_desc *const ld = b->cur_line_desc;
     const int right_margin = b->opt.right_margin ? b->opt.right_margin : ne_columns;
 
-    int64_t
-    len,
-    start_pos = 0,
-    end_pos = ld->line_len;
+    int64_t len;
+    int64_t start_pos = 0;
+    int64_t end_pos = ld->line_len;
 
     while (start_pos < ld->line_len && isasciispace(ld->line[start_pos]))
     {
@@ -890,7 +891,6 @@ int center(buffer *const b)
 
 int auto_indent_line(buffer *const b, const int64_t line, line_desc *const ld, const int64_t up_to_col)
 {
-
     line_desc *const prev_ld = (line_desc *)ld->ld_node.prev;
     assert_line_desc(prev_ld, b->encoding);
 
@@ -928,13 +928,16 @@ int shift(buffer *const b, char *p, char *msg, int msg_size)
     line_desc *ld = NULL, *start_line_desc = NULL;
     int64_t shift_size = 1;
     char dir = '>';
-    int shift_mag = b->opt.tab_size, rc = 0;
+    int shift_mag = b->opt.tab_size;
+    int rc = 0;
 
     /*  Parse parm p; looks like [<|>] ### [s|t], but we allow them
         in any order, once, with optional white space. */
     if (p)
     {
-        int dir_b = 0, size_b = 0, st_b = 0;
+        int dir_b = 0;
+        int size_b = 0;
+        int  st_b = 0;
         while (*p)
         {
             if (isasciispace(*p))
@@ -975,7 +978,9 @@ int shift(buffer *const b, char *p, char *msg, int msg_size)
         return INVALID_SHIFT_SPECIFIED;
     }
 
-    int64_t first_line = b->cur_line, last_line = b->cur_line, left_col = 0;
+    int64_t first_line = b->cur_line;
+    int64_t last_line = b->cur_line;
+    int64_t left_col = 0;
 
     if (b->marking)
     {
@@ -1017,7 +1022,10 @@ int shift(buffer *const b, char *p, char *msg, int msg_size)
         start_undo_chain(b);
         for (int64_t line = first_line; line <= last_line; line++)
         {
-            int64_t pos, c_pos, c_col_orig, offset;
+            int64_t pos;
+            int64_t c_pos;
+            int64_t c_col_orig;
+            int64_t offset;
             b->attr_len = -1;
             goto_line(b, line);
             ld = b->cur_line_desc;
