@@ -259,7 +259,7 @@ const char *tilde_expand(const char *filename)
 
         struct passwd *passwd = NULL;
 
-        if (t = malloc(s - filename))
+        if ((t = malloc(s - filename)))
         {
 
             memcpy(t, filename + 1, s - filename - 1);
@@ -748,7 +748,7 @@ encoding_type detect_encoding(const char *ss, const int64_t len)
                             return ENC_8_BIT;
                         }
                     }
-                    else if (!(*s & (1 << 7 - l) - 1) && !(*(s + 1) & ((1 << l - 2) - 1) << 8 - l))
+                    else if (!(*s & (1 << (7 - l)) - 1) && !(*(s + 1) & ((1 << (l - 2)) - 1) << (8 - l)))
                     {
                         return ENC_8_BIT;
                     }
@@ -935,12 +935,12 @@ const char *cur_bookmarks_string(const buffer *b)
     int i;
 
     memset(str, 0, 16);
-    for (i = 0, bits &= 0b01111111111; i < 10 && bits; i++, bits >>= 1)
+    for (i = 0, bits &= 0x3FF; i < 10 && bits; i++, bits >>= 1)
     {
         if (bits & 1)
         {
             *(s++) = '0' + i;
-            if ((bits & 0b111) == 0b111)
+            if ((bits & 0x07) == 0x07)
             {
                 *(s++) = '-';
             }
@@ -948,7 +948,7 @@ const char *cur_bookmarks_string(const buffer *b)
             {
                 *(s++) = ',';
             }
-            while ((bits & 0b111) == 0b111)
+            while ((bits & 0x07) == 0x07)
             {
                 bits >>= 1;
                 i++;

@@ -220,7 +220,7 @@ void output_line_desc(const int row, const int col, line_desc *ld, const int64_t
         {
             const int c_width = output_width(c);
 
-            if (output_col >= col || output_col + c_width > col && output_col >= 0)
+            if (output_col >= col || (output_col + c_width > col && output_col >= 0))
             {
                 if (output_col + c_width <= ne_columns)
                 {
@@ -228,7 +228,7 @@ void output_line_desc(const int row, const int col, line_desc *ld, const int64_t
                     {
                         /*  In the case of a differential update, we output only
                             characters whose attributes have changed. */
-                        if (!diff || diff && (attr_pos >= diff_size || diff[attr_pos] != attr[attr_pos]))
+                        if (!diff || (diff && (attr_pos >= diff_size || diff[attr_pos] != attr[attr_pos])))
                         {
                             move_cursor(row, output_col);
                             output_char(c, attr[attr_pos], utf8);

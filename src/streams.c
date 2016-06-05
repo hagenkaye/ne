@@ -85,7 +85,7 @@ char_stream *realloc_char_stream(char_stream *const cs, const int64_t size)
         return cs;
     }
 
-    if (cs->stream = realloc(cs->stream, size * sizeof * cs->stream))
+    if ((cs->stream = realloc(cs->stream, size * sizeof * cs->stream)))
     {
         cs->size = size;
         if (cs->len > size)

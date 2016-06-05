@@ -599,7 +599,7 @@ int main(int argc, char **argv)
 
         if (displaying_info)
         {
-            about(false);
+            about();
             displaying_info = false;
         }
         else if (cur_buffer->automatch.shown)

@@ -1601,7 +1601,7 @@ static void
 internal_function
 re_node_set_remove_at(re_node_set *set, Idx idx)
 {
-    if (idx < 0 || idx >= set->nelem)
+    if (idx >= set->nelem)
     {
         return;
     }

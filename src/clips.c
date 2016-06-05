@@ -43,7 +43,7 @@ clip_desc *alloc_clip_desc(int n, int64_t size)
     if (cd)
     {
         cd->n = n;
-        if (cd->cs = alloc_char_stream(size))
+        if ((cd->cs = alloc_char_stream(size)))
         {
             return cd;
         }
@@ -148,7 +148,7 @@ int copy_to_clip(buffer *b, int n, bool cut)
 
     if (y == b->block_start_line &&
         (b->cur_pos == b->block_start_pos ||
-         b->cur_pos >= ld->line_len && b->block_start_pos >= ld->line_len))
+         (b->cur_pos >= ld->line_len && b->block_start_pos >= ld->line_len)))
     {
 
         clip_desc *const new_cd = realloc_clip_desc(cd, n, 0);
@@ -169,7 +169,7 @@ int copy_to_clip(buffer *b, int n, bool cut)
 
     bool chaining;
     char *p = NULL;
-    if (y > b->block_start_line || y == b->block_start_line && b->cur_pos > b->block_start_pos)
+    if (y > b->block_start_line || (y == b->block_start_line && b->cur_pos > b->block_start_pos))
     {
         /* mark before/above cursor */
         int64_t clip_len = 0;
@@ -377,13 +377,13 @@ int erase_block(buffer *b)
 
     if (y == b->block_start_line &&
         (b->cur_pos == b->block_start_pos ||
-         b->cur_pos >= ld->line_len && b->block_start_pos >= ld->line_len))
+         (b->cur_pos >= ld->line_len && b->block_start_pos >= ld->line_len)))
     {
         return OK;
     }
 
     bool chaining = false;
-    if (y > b->block_start_line || y == b->block_start_line && b->cur_pos > b->block_start_pos)
+    if (y > b->block_start_line || (y == b->block_start_line && b->cur_pos > b->block_start_pos))
     {
         for (int64_t i = y; i >= b->block_start_line; i--)
         {
@@ -514,8 +514,7 @@ int copy_vert_to_clip(buffer *b, int n, bool cut)
     clip_desc *cd = get_nth_clip(n);
 
     if (b->cur_pos == b->block_start_pos ||
-        y == b->block_start_line && b->cur_pos >= ld->line_len &&
-        b->block_start_pos >= ld->line_len)
+        (y == b->block_start_line && b->cur_pos >= ld->line_len && b->block_start_pos >= ld->line_len))
     {
 
         clip_desc *const new_cd = realloc_clip_desc(cd, n, 0);
@@ -700,8 +699,7 @@ int erase_vert_block(buffer *b)
     line_desc *ld = b->cur_line_desc;
 
     if (b->cur_pos == b->block_start_pos ||
-        y == b->block_start_line && b->cur_pos >= ld->line_len &&
-        b->block_start_pos >= ld->line_len)
+        (y == b->block_start_line && b->cur_pos >= ld->line_len && b->block_start_pos >= ld->line_len))
     {
         return OK;
     }

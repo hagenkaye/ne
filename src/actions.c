@@ -307,7 +307,7 @@ int do_action(buffer *b, action a, int64_t c, char *p)
                 {
                     free(p);
                     snprintf(msg, MAX_MESSAGE_SIZE, "Cur Bookmarks: [%s] %s (0-9, -1, +1, or '-')", cur_bookmarks_string(b), a == SETBOOKMARK_A ? "SetBookmark" : "GotoBookmark");
-                    p = request_string(msg, NULL, true, COMPLETE_NONE, b->encoding == ENC_UTF8 || b->encoding == ENC_ASCII && b->opt.utf8auto);
+                    p = request_string(msg, NULL, true, COMPLETE_NONE, b->encoding == ENC_UTF8 || (b->encoding == ENC_ASCII && b->opt.utf8auto));
                     if (!p)
                     {
                         return INVALID_BOOKMARK_DESIGNATION;
@@ -414,7 +414,7 @@ int do_action(buffer *b, action a, int64_t c, char *p)
                         delay_update();
                         goto_line(b, b->bookmark[c].line);
                         goto_pos(b, b->bookmark[c].pos);
-                        if (avshift = b->cur_y - b->bookmark[c].cur_y)
+                        if ((avshift = b->cur_y - b->bookmark[c].cur_y))
                         {
                             snprintf(msg, MAX_MESSAGE_SIZE, "%c%d", avshift > 0 ? 'T' : 'B', avshift > 0 ? avshift : -avshift);
                             adjust_view(b, msg);
@@ -459,7 +459,7 @@ int do_action(buffer *b, action a, int64_t c, char *p)
             recording = b->recording;
             b->recording = 0;
             error = ERROR;
-            if (p || (p = request_string("String", NULL, false, COMPLETE_NONE, b->encoding == ENC_UTF8 || b->encoding == ENC_ASCII && b->opt.utf8auto)))
+            if (p || (p = request_string("String", NULL, false, COMPLETE_NONE, b->encoding == ENC_UTF8 || (b->encoding == ENC_ASCII && b->opt.utf8auto))))
             {
                 encoding_type encoding = detect_encoding(p, strlen(p));
                 error = OK;
@@ -501,7 +501,7 @@ int do_action(buffer *b, action a, int64_t c, char *p)
             return OK;
 
         case AUTOMATCHBRACKET_A:
-            if (c < 0 && (c = request_number("Match mode (sum of 0:none, 1:brightness, 2:inverse, 4:bold, 8:underline)", b->opt.automatch)) < 0 || c > 15)
+            if ((c < 0 && (c = request_number("Match mode (sum of 0:none, 1:brightness, 2:inverse, 4:bold, 8:underline)", b->opt.automatch)) < 0) || c > 15)
             {
                 return ((c) == ABORT ? OK : INVALID_MATCH_MODE);
             }
@@ -582,7 +582,7 @@ int do_action(buffer *b, action a, int64_t c, char *p)
 
             start_undo_chain(b);
 
-            if (deleted_char = !b->opt.insert && b->cur_pos < b->cur_line_desc->line_len)
+            if ((deleted_char = !b->opt.insert && b->cur_pos < b->cur_line_desc->line_len))
             {
                 delete_one_char(b, b->cur_line_desc, b->cur_line, b->cur_pos);
             }
@@ -943,7 +943,7 @@ int do_action(buffer *b, action a, int64_t c, char *p)
             start_undo_chain(b);
             for (int64_t i = 0; i < c && !stop; i++)
             {
-                if (error = delete_one_line(b, b->cur_line_desc, b->cur_line))
+                if ((error = delete_one_line(b, b->cur_line_desc, b->cur_line)))
                 {
                     break;
                 }
@@ -981,7 +981,7 @@ int do_action(buffer *b, action a, int64_t c, char *p)
                 {
                     freeze_attributes(b, b->cur_line_desc);
                 }
-                if (error = undelete_line(b))
+                if ((error = undelete_line(b)))
                 {
                     break;
                 }
@@ -1168,7 +1168,7 @@ int do_action(buffer *b, action a, int64_t c, char *p)
 
         case FIND_A:
         case FINDREGEXP_A:
-            if (p || (p = request_string(a == FIND_A ? "Find" : "Find RegExp", b->find_string, false, COMPLETE_NONE, b->encoding == ENC_UTF8 || b->encoding == ENC_ASCII && b->opt.utf8auto)))
+            if (p || (p = request_string(a == FIND_A ? "Find" : "Find RegExp", b->find_string, false, COMPLETE_NONE, b->encoding == ENC_UTF8 || (b->encoding == ENC_ASCII && b->opt.utf8auto))))
             {
 
                 const encoding_type encoding = detect_encoding(p, strlen(p));
@@ -1199,7 +1199,7 @@ int do_action(buffer *b, action a, int64_t c, char *p)
                 return DOCUMENT_IS_READ_ONLY;
             }
 
-            if ((q = b->find_string) || (q = request_string(b->last_was_regexp ? "Find RegExp" : "Find", NULL, false, COMPLETE_NONE, b->encoding == ENC_UTF8 || b->encoding == ENC_ASCII && b->opt.utf8auto)))
+            if ((q = b->find_string) || (q = request_string(b->last_was_regexp ? "Find RegExp" : "Find", NULL, false, COMPLETE_NONE, b->encoding == ENC_UTF8 || (b->encoding == ENC_ASCII && b->opt.utf8auto))))
             {
 
                 const encoding_type search_encoding = detect_encoding(q, strlen(q));
@@ -1218,14 +1218,14 @@ int do_action(buffer *b, action a, int64_t c, char *p)
                     b->find_string_changed = 1;
                 }
 
-                if (p || (p = request_string(b->last_was_regexp ? "Replace RegExp" : "Replace", b->replace_string, true, COMPLETE_NONE, b->encoding == ENC_UTF8 || b->encoding == ENC_ASCII && b->opt.utf8auto)))
+                if (p || (p = request_string(b->last_was_regexp ? "Replace RegExp" : "Replace", b->replace_string, true, COMPLETE_NONE, b->encoding == ENC_UTF8 || (b->encoding == ENC_ASCII && b->opt.utf8auto))))
                 {
                     const encoding_type replace_encoding = detect_encoding(p, strlen(p));
                     bool first_search = true;
                     int64_t num_replace = 0;
 
-                    if (replace_encoding != ENC_ASCII && b->encoding != ENC_ASCII && replace_encoding != b->encoding ||
-                        search_encoding != ENC_ASCII && replace_encoding != ENC_ASCII && search_encoding != replace_encoding)
+                    if ((replace_encoding != ENC_ASCII && b->encoding != ENC_ASCII && replace_encoding != b->encoding) ||
+                        (search_encoding != ENC_ASCII && replace_encoding != ENC_ASCII && search_encoding != replace_encoding))
                     {
                         free(p);
                         return INCOMPATIBLE_REPLACE_STRING_ENCODING;
@@ -1289,6 +1289,7 @@ int do_action(buffer *b, action a, int64_t c, char *p)
                                 num_replace++;
 
                                 if (last_replace_empty_match)
+                                {
                                     if (b->opt.search_back)
                                     {
                                         error = char_left(cur_buffer);
@@ -1297,6 +1298,7 @@ int do_action(buffer *b, action a, int64_t c, char *p)
                                     {
                                         error = char_right(cur_buffer);
                                     }
+                                }
                             }
 
                             if (print_error(error))
@@ -1309,7 +1311,7 @@ int do_action(buffer *b, action a, int64_t c, char *p)
                             }
                         }
 
-                        if (c == 'B' && !(b->opt.search_back) || c == 'F' && (b->opt.search_back))
+                        if ((c == 'B' && !(b->opt.search_back)) || (c == 'F' && (b->opt.search_back)))
                         {
                             b->opt.search_back = !b->opt.search_back;
                             b->find_string_changed = 1;
@@ -1338,7 +1340,7 @@ int do_action(buffer *b, action a, int64_t c, char *p)
                         return STOPPED;
                     }
 
-                    if (error && ((c != 'A' && a != REPLACEALL_A || first_search) || error != NOT_FOUND))
+                    if (error && (((c != 'A' && a != REPLACEALL_A) || first_search) || error != NOT_FOUND))
                     {
                         print_error(error);
                         return ERROR;
@@ -1373,8 +1375,8 @@ int do_action(buffer *b, action a, int64_t c, char *p)
                 if (b->last_was_replace)
                 {
                     const encoding_type replace_encoding = detect_encoding(b->replace_string, strlen(b->replace_string));
-                    if (replace_encoding != ENC_ASCII && b->encoding != ENC_ASCII && replace_encoding != b->encoding ||
-                        search_encoding != ENC_ASCII && replace_encoding != ENC_ASCII && search_encoding != replace_encoding)
+                    if ((replace_encoding != ENC_ASCII && b->encoding != ENC_ASCII && replace_encoding != b->encoding) ||
+                        (search_encoding != ENC_ASCII && replace_encoding != ENC_ASCII && search_encoding != replace_encoding))
                     {
                         return INCOMPATIBLE_REPLACE_STRING_ENCODING;
                     }
@@ -1407,6 +1409,7 @@ int do_action(buffer *b, action a, int64_t c, char *p)
                                 }
 
                                 if (last_replace_empty_match)
+                                {
                                     if (b->opt.search_back)
                                     {
                                         error = char_left(cur_buffer);
@@ -1415,6 +1418,7 @@ int do_action(buffer *b, action a, int64_t c, char *p)
                                     {
                                         error = char_right(cur_buffer);
                                     }
+                                }
                             }
 
                             if (print_error(error))
@@ -1576,7 +1580,7 @@ int do_action(buffer *b, action a, int64_t c, char *p)
         {
             const encoding_type old_encoding = b->encoding, encoding = detect_buffer_encoding(b);
 
-            if (c < 0 && b->encoding != ENC_UTF8 || c > 0)
+            if ((c < 0 && b->encoding != ENC_UTF8) || c > 0)
             {
                 if (encoding == ENC_ASCII || encoding == ENC_UTF8)
                 {
@@ -1922,7 +1926,7 @@ int do_action(buffer *b, action a, int64_t c, char *p)
             return ERROR;
 
         case EXEC_A:
-            if (p || (p = request_string("Command", b->command_line, false, COMPLETE_FILE, b->encoding == ENC_UTF8 || b->encoding == ENC_ASCII && b->opt.utf8auto)))
+            if (p || (p = request_string("Command", b->command_line, false, COMPLETE_FILE, b->encoding == ENC_UTF8 || (b->encoding == ENC_ASCII && b->opt.utf8auto))))
             {
                 free(b->command_line);
                 b->command_line = p;
@@ -1931,7 +1935,7 @@ int do_action(buffer *b, action a, int64_t c, char *p)
             return ERROR;
 
         case SYSTEM_A:
-            if (p || (p = request_string("Shell command", NULL, false, COMPLETE_FILE, b->encoding == ENC_UTF8 || b->encoding == ENC_ASCII && b->opt.utf8auto)))
+            if (p || (p = request_string("Shell command", NULL, false, COMPLETE_FILE, b->encoding == ENC_UTF8 || (b->encoding == ENC_ASCII && b->opt.utf8auto))))
             {
 
                 unset_interactive_mode();
@@ -1961,7 +1965,7 @@ int do_action(buffer *b, action a, int64_t c, char *p)
                 b->mark_is_vertical = 0;
             }
 
-            if (p || (p = request_string("Filter", NULL, false, COMPLETE_FILE, b->encoding == ENC_UTF8 || b->encoding == ENC_ASCII && b->opt.utf8auto)))
+            if (p || (p = request_string("Filter", NULL, false, COMPLETE_FILE, b->encoding == ENC_UTF8 || (b->encoding == ENC_ASCII && b->opt.utf8auto))))
             {
                 int fin = -1, fout = -1;
 
@@ -1987,7 +1991,7 @@ int do_action(buffer *b, action a, int64_t c, char *p)
 
                         if (!(error = save_clip(INT_MAX, tmpnam1, b->is_CRLF, b->opt.binary)))
                         {
-                            if (command = malloc(strlen(p) + strlen(tmpnam1) + strlen(tmpnam2) + 16))
+                            if ((command = malloc(strlen(p) + strlen(tmpnam1) + strlen(tmpnam2) + 16)))
                             {
 
                                 strcat(strcat(strcat(strcat(strcat(strcpy(command, "( "), p), " ) <"), tmpnam1), " >"), tmpnam2);
@@ -2178,7 +2182,7 @@ int do_action(buffer *b, action a, int64_t c, char *p)
             {
                 return SYNTAX_NOT_ENABLED;
             }
-            if (p || (p = request_string("Syntax",  b->syn ? (const char *)b->syn->name : NULL, true, COMPLETE_SYNTAX, b->encoding == ENC_UTF8 || b->encoding == ENC_ASCII && b->opt.utf8auto)))
+            if (p || (p = request_string("Syntax",  b->syn ? (const char *)b->syn->name : NULL, true, COMPLETE_SYNTAX, b->encoding == ENC_UTF8 || (b->encoding == ENC_ASCII && b->opt.utf8auto))))
             {
                 if (!strcmp(p, "*"))
                 {
@@ -2291,7 +2295,7 @@ int do_action(buffer *b, action a, int64_t c, char *p)
             snprintf(msg, MAX_MESSAGE_SIZE, "AutoComplete: prefix \"%s\"", p);
 
             int e;
-            if (p = autocomplete(p, msg, true, &e))
+            if ((p = autocomplete(p, msg, true, &e)))
             {
                 b->recording = 0;
                 start_undo_chain(b);

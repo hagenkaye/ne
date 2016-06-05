@@ -395,7 +395,7 @@ void set_attr(const uint32_t attr)
         /*  Colors must be set if attributes have been reset and the required
             color is not default, or in any case if the color has changed. */
 
-        if (attr_reset && (attr & FG_NOT_DEFAULT) || (attr & FG_MASK) != (curr_attr & FG_MASK))
+        if ((attr_reset && (attr & FG_NOT_DEFAULT)) || (attr & FG_MASK) != (curr_attr & FG_MASK))
         {
             if (attr & FG_NOT_DEFAULT)
             {
@@ -403,7 +403,7 @@ void set_attr(const uint32_t attr)
                 OUTPUT1(buf);
             }
         }
-        if (attr_reset && (attr & BG_NOT_DEFAULT) || (attr & BG_MASK) != (curr_attr & BG_MASK))
+        if ((attr_reset && (attr & BG_NOT_DEFAULT)) || (attr & BG_MASK) != (curr_attr & BG_MASK))
         {
             if (attr & BG_NOT_DEFAULT)
             {
@@ -524,37 +524,37 @@ static void out(int c, const uint32_t attr)
         else if (c < 0x800)
         {
             putchar(0xC0 | (c >> 6));
-            putchar(0x80 | (c >> 0) & 0x3F);
+            putchar(0x80 | ((c >> 0) & 0x3F));
         }
         else if (c < 0x10000)
         {
             putchar(0xE0 | (c >> 12));
-            putchar(0x80 | (c >> 6) & 0x3F);
-            putchar(0x80 | (c >> 0) & 0x3F);
+            putchar(0x80 | ((c >> 6) & 0x3F));
+            putchar(0x80 | ((c >> 0) & 0x3F));
         }
         else if (c < 0x200000)
         {
             putchar(0xF0 | (c >> 18));
-            putchar(0x80 | (c >> 12) & 0x3F);
-            putchar(0x80 | (c >> 6) & 0x3F);
-            putchar(0x80 | (c >> 0) & 0x3F);
+            putchar(0x80 | ((c >> 12) & 0x3F));
+            putchar(0x80 | ((c >> 6) & 0x3F));
+            putchar(0x80 | ((c >> 0) & 0x3F));
         }
         else if (c < 0x4000000)
         {
             putchar(0xF8 | (c >> 24));
-            putchar(0x80 | (c >> 18) & 0x3F);
-            putchar(0x80 | (c >> 12) & 0x3F);
-            putchar(0x80 | (c >> 6) & 0x3F);
-            putchar(0x80 | (c >> 0) & 0x3F);
+            putchar(0x80 | ((c >> 18) & 0x3F));
+            putchar(0x80 | ((c >> 12) & 0x3F));
+            putchar(0x80 | ((c >> 6) & 0x3F));
+            putchar(0x80 | ((c >> 0) & 0x3F));
         }
         else
         {
             putchar(0xFC | (c >> 30));
-            putchar(0x80 | (c >> 24) & 0x3F);
-            putchar(0x80 | (c >> 18) & 0x3F);
-            putchar(0x80 | (c >> 12) & 0x3F);
-            putchar(0x80 | (c >> 6) & 0x3F);
-            putchar(0x80 | (c >> 0) & 0x3F);
+            putchar(0x80 | ((c >> 24) & 0x3F));
+            putchar(0x80 | ((c >> 18) & 0x3F));
+            putchar(0x80 | ((c >> 12) & 0x3F));
+            putchar(0x80 | ((c >> 6) & 0x3F));
+            putchar(0x80 | ((c >> 0) & 0x3F));
         }
     }
     else
@@ -1387,7 +1387,7 @@ void copy_caps(void)
     ne_clr_eol = clr_eol;
     ne_transparent_underline = transparent_underline;
 
-    if (ansi_color_ok = (set_a_foreground && set_a_background))
+    if ((ansi_color_ok = (set_a_foreground && set_a_background)))
     {
         ne_set_background = set_a_background;
         ne_set_foreground = set_a_foreground;

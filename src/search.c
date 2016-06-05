@@ -330,7 +330,7 @@ int find_regexp(buffer *const b, const char *regex, const bool skip_first)
 
     if (re_pb.buffer == NULL)
     {
-        if (re_pb.buffer = malloc(START_BUFFER_SIZE))
+        if ((re_pb.buffer = malloc(START_BUFFER_SIZE)))
         {
             re_pb.allocated = START_BUFFER_SIZE;
         }
@@ -435,7 +435,7 @@ int find_regexp(buffer *const b, const char *regex, const bool skip_first)
 
             do
             {
-                if (escape || *s != '.' && *s != '(' && *s != '[' && *s != '\\')
+                if (escape || (*s != '.' && *s != '(' && *s != '[' && *s != '\\'))
                 {
                     if (escape && *s == 'W')
                     {
@@ -609,7 +609,7 @@ int replace_regexp(buffer *const b, const char *const string)
 
     bool reg_used = false;
     char *p, *q, *t = NULL;
-    if (q = p = str_dup(string))
+    if ((q = p = str_dup(string)))
     {
 
         int len = strlen(p);
@@ -659,7 +659,7 @@ int replace_regexp(buffer *const b, const char *const string)
 
         if (reg_used)
         {
-            if (t = malloc(re_reg.end[0] - re_reg.start[0] + 1))
+            if ((t = malloc(re_reg.end[0] - re_reg.start[0] + 1)))
             {
                 memcpy(t, b->cur_line_desc->line + re_reg.start[0], re_reg.end[0] - re_reg.start[0]);
                 t[re_reg.end[0] - re_reg.start[0]] = 0;

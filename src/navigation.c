@@ -419,7 +419,7 @@ int char_right(buffer *const b)
 
     /*  If the current x position would be beyond the right screen margin, or if the same happens
         for the character we are currently over, we shift the screen to the right. */
-    if (b->cur_x >= ne_columns || ld->line && b->cur_pos < ld->line_len && b->cur_x + get_char_width(&ld->line[b->cur_pos], b->encoding) > ne_columns)
+    if (b->cur_x >= ne_columns || (ld->line && b->cur_pos < ld->line_len && b->cur_x + get_char_width(&ld->line[b->cur_pos], b->encoding) > ne_columns))
     {
         block_right(b, b->opt.tab_size * 2);
     }

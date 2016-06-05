@@ -815,6 +815,7 @@ char *complete_filename(const char *start_prefix)
         for (struct dirent * de; !stop && (de = readdir(d));)
         {
             if (is_prefix(start_prefix, de->d_name))
+            {
                 if (cur_prefix)
                 {
                     cur_prefix[max_prefix(cur_prefix, de->d_name)] = 0;
@@ -825,6 +826,7 @@ char *complete_filename(const char *start_prefix)
                     cur_prefix = str_dup(de->d_name);
                     is_dir = is_directory(de->d_name);
                 }
+            }
         }
 
         closedir(d);
@@ -897,7 +899,7 @@ char *request_syntax()
     if ((p = exists_prefs_dir()) && strlen(p) + 2 + strlen(SYNTAX_DIR) < sizeof syn_dir_name)
     {
         strcat(strcpy(syn_dir_name, p), SYNTAX_DIR);
-        if (d = opendir(syn_dir_name))
+        if ((d = opendir(syn_dir_name)))
         {
             load_syntax_names(&rl, d, true);
             closedir(d);
@@ -906,7 +908,7 @@ char *request_syntax()
     if ((p = exists_gprefs_dir()) && strlen(p) + 2 + strlen(SYNTAX_DIR) < sizeof syn_dir_name)
     {
         strcat(strcpy(syn_dir_name, p), SYNTAX_DIR);
-        if (d = opendir(syn_dir_name))
+        if ((d = opendir(syn_dir_name)))
         {
             load_syntax_names(&rl, d, false);
             closedir(d);
@@ -918,7 +920,7 @@ char *request_syntax()
     if (rl.cur_entries && (result = request_strings(&rl, 0)) != ERROR)
     {
         char *const q = rl.entries[result >= 0 ? result : -result - 2];
-        if (p = malloc(strlen(q) + 3))
+        if ((p = malloc(strlen(q) + 3)))
         {
             strcpy(p, q);
             if (p[strlen(p) - 1] == rl.suffix)
@@ -1079,7 +1081,7 @@ char *request_file(const buffer *b, const char *prompt, const char *default_name
         }
     }
 
-    if (p = request_string(prompt, p ? p + 1 : default_name, false, COMPLETE_FILE, io_utf8))
+    if ((p = request_string(prompt, p ? p + 1 : default_name, false, COMPLETE_FILE, io_utf8)))
     {
         return p;
     }
@@ -1233,9 +1235,9 @@ int req_list_init(req_list *const rl, int cmpfnc(const char *, const char *), co
     rl->suffix = suffix;
     rl->cur_entries = rl->alloc_entries = rl->max_entry_len = 0;
     rl->cur_chars = rl->alloc_chars = 0;
-    if (rl->entries = malloc(sizeof(char *) * DEF_ENTRIES_ALLOC_SIZE))
+    if ((rl->entries = malloc(sizeof(char *) * DEF_ENTRIES_ALLOC_SIZE)))
     {
-        if (rl->chars = malloc(sizeof(char) * DEF_CHARS_ALLOC_SIZE))
+        if ((rl->chars = malloc(sizeof(char) * DEF_CHARS_ALLOC_SIZE)))
         {
             rl->alloc_entries = DEF_ENTRIES_ALLOC_SIZE;
             rl->alloc_chars = DEF_CHARS_ALLOC_SIZE;
@@ -1266,7 +1268,7 @@ void req_list_finalize(req_list *const rl)
     }
     if (rl->allow_reorder)
     {
-        if (rl->orig_order = malloc(sizeof(int) * rl->cur_entries))
+        if ((rl->orig_order = malloc(sizeof(int) * rl->cur_entries)))
         {
             for (int i = 0; i < rl->cur_entries; i++)
             {

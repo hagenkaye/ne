@@ -48,7 +48,7 @@ static void add_string(const char *const s, const int len, const int ext)
     }
     if (len >= buflen)
     {
-        if (buf_new = realloc(buf, len * 2 + 1))
+        if ((buf_new = realloc(buf, len * 2 + 1)))
         {
             buflen = len * 2 + 1;
             buf = buf_new;
@@ -68,7 +68,7 @@ static void search_buff(const buffer *b, char *p, const int encoding, const bool
     assert(p);
     const int p_len = strlen(p);
 
-    for (line_desc *ld = (line_desc *)b->line_desc_list.head, *next; next = (line_desc *)ld->ld_node.next; ld = next)
+    for (line_desc *ld = (line_desc *)b->line_desc_list.head, *next; (next = (line_desc *)ld->ld_node.next); ld = next)
     {
         int64_t l = 0, r = 0;
         do

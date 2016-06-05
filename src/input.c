@@ -353,7 +353,7 @@ static void input_autocomplete(void)
     p[pos - prefix_pos] = 0;
 
     int ac_err;
-    if (p = autocomplete(p, NULL, true, &ac_err))
+    if ((p = autocomplete(p, NULL, true, &ac_err)))
     {
         encoding_type ac_encoding = detect_encoding(p, strlen(p));
         if (ac_encoding != ENC_ASCII && encoding != ENC_ASCII && ac_encoding != encoding)
@@ -747,7 +747,7 @@ char *request(const char *prompt, const char *const default_string, const bool a
                     if (len && input_buffer[len - 1] == '"')
                     {
                         input_buffer[len - 1] = 0;
-                        if (prefix = strrchr(input_buffer, '"'))
+                        if ((prefix = strrchr(input_buffer, '"')))
                         {
                             quoted = true;
                             prefix++;

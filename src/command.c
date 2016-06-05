@@ -217,7 +217,7 @@ int cmdcmp(const char *c, const char *m)
         m++;
     }
 
-    return *c || *m && !isasciispace(*m) ;
+    return *c || (*m && !isasciispace(*m)) ;
 }
 
 
@@ -314,8 +314,8 @@ int parse_command_line(const char *command_line, int64_t *const num_arg, char **
 
     const int h = hash_cmd(command_line, p - command_line);
     action a;
-    if ((a = hash_table[h]) && !cmdcmp(commands[--a].name, command_line)
-        || (a = short_hash_table[h]) && !cmdcmp(commands[--a].short_name, command_line))
+    if (((a = hash_table[h]) && !cmdcmp(commands[--a].name, command_line))
+        || ((a = short_hash_table[h]) && !cmdcmp(commands[--a].short_name, command_line)))
     {
 
         while (isasciispace(*p))
@@ -530,8 +530,8 @@ static int insertchar_val(const char *p)
     int h = hash_cmd(cmd, p - cmd);
 
     action a;
-    if (((a = hash_table[h]) && !cmdcmp(commands[--a].name, cmd)
-         || (a = short_hash_table[h]) && !cmdcmp(commands[--a].short_name, cmd)) && a == INSERTCHAR_A)
+    if ((((a = hash_table[h]) && !cmdcmp(commands[--a].name, cmd))
+         || ((a = short_hash_table[h]) && !cmdcmp(commands[--a].short_name, cmd))) && a == INSERTCHAR_A)
     {
 
         while (isasciispace(*p))
@@ -669,7 +669,7 @@ int play_macro(buffer *b, char_stream *cs)
         fprintf(stderr, "%s\n", p); /* During tests, we output to stderr the current command. */
 #endif
 
-        if (error = execute_command_line(b, p))
+        if ((error = execute_command_line(b, p)))
 #ifndef NE_TEST
             break /* During tests, we never interrupt a macro. */
 #endif
@@ -847,7 +847,7 @@ char *find_key_strokes(int c)
                     }
                     strcpy(str, "Bound key(s):");
                 }
-                if (p = realloc(str, strlen(str) + strlen(key_stroke[i]) + 2))
+                if ((p = realloc(str, strlen(str) + strlen(key_stroke[i]) + 2)))
                 {
                     str = strcat(strcat(p, " "), key_stroke[i]);
                 }
@@ -895,8 +895,8 @@ void help(char *p)
                 D(fprintf(stderr, "Help check #3: p=%p, *p=%s, r=%d\n", p, p, r);)
 
                 action a;
-                if ((a = hash_table[r]) && !cmdcmp(commands[--a].name, p)
-                    || (a = short_hash_table[r]) && !cmdcmp(commands[--a].short_name, p))
+                if (((a = hash_table[r]) && !cmdcmp(commands[--a].name, p))
+                    || ((a = short_hash_table[r]) && !cmdcmp(commands[--a].short_name, p)))
                 {
                     r = a;
                 }

@@ -381,7 +381,7 @@ int word_wrap2(buffer *const b)
     goto_pos(b, b->bookmark[WORDWRAP_BOOKMARK].pos);
     line = b->cur_line_desc->line;
     b->bookmark[WORDWRAP_BOOKMARK].cur_y += b->bookmark[WORDWRAP_BOOKMARK].line - original_line;
-    if (avshift = b->cur_y - b->bookmark[WORDWRAP_BOOKMARK].cur_y)
+    if ((avshift = b->cur_y - b->bookmark[WORDWRAP_BOOKMARK].cur_y))
     {
         snprintf(avcmd, 16, "%c%d", avshift > 0 ? 'T' : 'B', avshift > 0 ? avshift : -avshift);
         adjust_view(b, avcmd);
@@ -750,7 +750,7 @@ int paragraph(buffer *const b)
         {
             /** If the next line is just a spot (no text), we want to skip over it  **/
             /** rather than splicing it to the current line.                        **/
-            if (skip || save_spots((line_desc *)ld->ld_node.next, pos, b->encoding) && ((line_desc *)ld->ld_node.next)->line_len <= pos + pa_spots_pos)
+            if (skip || (save_spots((line_desc *)ld->ld_node.next, pos, b->encoding) && ((line_desc *)ld->ld_node.next)->line_len <= pos + pa_spots_pos))
             {
                 /* skip to next line */
                 ld = (line_desc *)ld->ld_node.next;

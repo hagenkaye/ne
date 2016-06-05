@@ -81,7 +81,7 @@ int utf8char(const char *const ss)
     }
     if (s[0] < 0xE0)
     {
-        return (s[0] & 0x1F) << 6 | s[1] & 0x3F;
+        return (s[0] & 0x1F) << 6 | (s[1] & 0x3F);
     }
     if (s[0] < 0xF0)
     {
@@ -114,43 +114,43 @@ int utf8str(const int c, char *const ss)
     if (c < 0x800)
     {
         s[0] = c >> 6 | 0xC0;
-        s[1] = c & 0x3F | 0x80;
+        s[1] = (c & 0x3F) | 0x80;
         return 2;
     }
 
     if (c < 0x10000)
     {
         s[0] = c >> 12 | 0xE0;
-        s[1] = c >> 6 & 0x3F | 0x80;
-        s[2] = c & 0x3F | 0x80;
+        s[1] = (c >> 6 & 0x3F) | 0x80;
+        s[2] = (c & 0x3F) | 0x80;
         return 3;
     }
 
     if (c < 0x200000)
     {
         s[0] = c >> 18 | 0xF0;
-        s[1] = c >> 12 & 0x3F | 0x80;
-        s[2] = c >> 6 & 0x3F | 0x80;
-        s[3] = c & 0x3F | 0x80;
+        s[1] = (c >> 12 & 0x3F) | 0x80;
+        s[2] = (c >> 6 & 0x3F) | 0x80;
+        s[3] = (c & 0x3F) | 0x80;
         return 4;
     }
 
     if (c < 0x4000000)
     {
         s[0] = c >> 24 | 0xF8;
-        s[1] = c >> 18 & 0x3F | 0x80;
-        s[2] = c >> 12 & 0x3F | 0x80;
-        s[3] = c >> 6 & 0x3F | 0x80;
-        s[4] = c & 0x3F | 0x80;
+        s[1] = (c >> 18 & 0x3F) | 0x80;
+        s[2] = (c >> 12 & 0x3F) | 0x80;
+        s[3] = (c >> 6 & 0x3F) | 0x80;
+        s[4] = (c & 0x3F) | 0x80;
         return 5;
     }
 
     s[0] = c >> 30 | 0xFC;
-    s[1] = c >> 24 & 0x3F | 0x80;
-    s[2] = c >> 18 & 0x3F | 0x80;
-    s[3] = c >> 12 & 0x3F | 0x80;
-    s[4] = c >> 6 & 0x3F | 0x80;
-    s[5] = c & 0x3F | 0x80;
+    s[1] = (c >> 24 & 0x3F) | 0x80;
+    s[2] = (c >> 18 & 0x3F) | 0x80;
+    s[3] = (c >> 12 & 0x3F) | 0x80;
+    s[4] = (c >> 6 & 0x3F) | 0x80;
+    s[5] = (c & 0x3F) | 0x80;
     return 6;
 }
 

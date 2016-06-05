@@ -56,7 +56,7 @@ encoding_type detect_buffer_encoding(const buffer *const b)
     line_desc *ld = (line_desc *)b->line_desc_list.head, *next;
     encoding_type encoding = ENC_ASCII, e;
 
-    while (next = (line_desc *)ld->ld_node.next)
+    while ((next = (line_desc *)ld->ld_node.next))
     {
         e = detect_encoding(ld->line, ld->line_len);
         if (e != ENC_ASCII)
@@ -91,7 +91,7 @@ char_pool *alloc_char_pool(int64_t size)
     char_pool *const cp = calloc(1, sizeof(char_pool));
     if (cp)
     {
-        if (cp->pool = calloc(sizeof(char), size))
+        if ((cp->pool = calloc(sizeof(char), size)))
         {
             cp->size = size;
             return cp;
@@ -164,7 +164,7 @@ line_desc_pool *alloc_line_desc_pool(int64_t pool_size)
     line_desc_pool *const ldp = calloc(1, sizeof(line_desc_pool));
     if (ldp)
     {
-        if (ldp->pool = calloc(pool_size, do_syntax ? sizeof(line_desc) : sizeof(no_syntax_line_desc)))
+        if ((ldp->pool = calloc(pool_size, do_syntax ? sizeof(line_desc) : sizeof(no_syntax_line_desc))))
         {
             ldp->size = pool_size;
             new_list(&ldp->free_list);
@@ -212,7 +212,7 @@ buffer *alloc_buffer(const buffer *const cur_b)
 
     buffer *b;
 
-    if (b = calloc(1, sizeof(buffer)))
+    if ((b = calloc(1, sizeof(buffer))))
     {
 
         new_list(&b->line_desc_pool_list);
@@ -511,7 +511,7 @@ line_desc *alloc_line_desc(buffer *const b)
         using the standard pool size, and let's put it at the start
         of the list, so that it is always scanned first. */
 
-    if (ldp = alloc_line_desc_pool(0))
+    if ((ldp = alloc_line_desc_pool(0)))
     {
         add_head(&b->line_desc_pool_list, &ldp->ldp_node);
         line_desc *const ld = (line_desc *)ldp->free_list.head;
@@ -543,7 +543,7 @@ void free_line_desc(buffer *const b, line_desc *const ld)
     for (ldp = (line_desc_pool *)b->line_desc_pool_list.head; ldp->ldp_node.next; ldp = (line_desc_pool *)ldp->ldp_node.next)
     {
         assert_line_desc_pool(ldp);
-        if (ld >= ldp->pool && (do_syntax && ld < ldp->pool + ldp->size || !do_syntax && ld < (line_desc *)((no_syntax_line_desc *)ldp->pool + ldp->size)))
+        if (ld >= ldp->pool && ((do_syntax && ld < ldp->pool + ldp->size) || (!do_syntax && ld < (line_desc *)((no_syntax_line_desc *)ldp->pool + ldp->size))))
         {
             break;
         }
@@ -624,7 +624,7 @@ char *alloc_chars(buffer *const b, const int64_t len)
     /*  If no free space has been found, we allocate a new pool which is guaranteed
         to contain at least len characters. The pool is added to the head of the list. */
 
-    if (cp = alloc_char_pool(len))
+    if ((cp = alloc_char_pool(len)))
     {
         add_head(&b->char_pool_list, &cp->cp_node);
         cp->last_used = len - 1;
@@ -890,7 +890,7 @@ int insert_stream(buffer *const b, line_desc *ld, int64_t line, int64_t pos, con
 
             if (!ld->line)
             {
-                if (ld->line = alloc_chars(b, len))
+                if ((ld->line = alloc_chars(b, len)))
                 {
                     memcpy(ld->line, s, len);
                     ld->line_len = len;
@@ -967,7 +967,7 @@ int insert_stream(buffer *const b, line_desc *ld, int64_t line, int64_t pos, con
         {
             line_desc *new_ld;
 
-            if (new_ld = alloc_line_desc(b))
+            if ((new_ld = alloc_line_desc(b)))
             {
 
                 add(&new_ld->ld_node, &ld->ld_node);
@@ -1099,7 +1099,7 @@ int delete_stream(buffer *const b, line_desc *const ld, const int64_t line, cons
     assert_line_desc(ld, b->encoding);
 
     /* If we are in no man's land, we return. */
-    if (!b || !ld || !len || pos > ld->line_len || pos == ld->line_len && !ld->ld_node.next->next)
+    if (!b || !ld || !len || pos > ld->line_len || (pos == ld->line_len && !ld->ld_node.next->next))
     {
         return ERROR;
     }
@@ -1262,8 +1262,11 @@ int delete_stream(buffer *const b, line_desc *const ld, const int64_t line, cons
 
             /* We're about to erase n chars at (line,pos); adjust mark and bookmarks accordingly. */
             if (b->marking)
+            {
                 if (b->block_start_line == line)
+                {
                     if (b->block_start_pos >= pos)
+                    {
                         if (b->block_start_pos < pos + n)
                         {
                             b->block_start_pos = pos;
@@ -1272,12 +1275,17 @@ int delete_stream(buffer *const b, line_desc *const ld, const int64_t line, cons
                         {
                             b->block_start_pos -= n;
                         }
+                    }
+                }
+            }
             for (int i = 0, mask = b->bookmark_mask; mask; i++, mask >>= 1)
             {
                 if (mask & 1)
                 {
                     if (b->bookmark[i].line == line)
+                    {
                         if (b->bookmark[i].pos >= pos)
+                        {
                             if (b->bookmark[i].pos < pos + n)
                             {
                                 b->bookmark[i].pos = pos;
@@ -1286,6 +1294,8 @@ int delete_stream(buffer *const b, line_desc *const ld, const int64_t line, cons
                             {
                                 b->bookmark[i].pos -= n;
                             }
+                        }
+                    }
                 }
             }
 
@@ -1560,7 +1570,7 @@ int load_fh_in_buffer(buffer *b, int fh)
 
     int64_t num_lines;
     for (int64_t i = num_lines = 0; i < len; i++, p++)
-        if (!b->opt.binary && (*p == terminators[0] || *p == terminators[1]) || !*p)
+        if ((!b->opt.binary && (*p == terminators[0] || *p == terminators[1])) || !*p)
         {
             if (i < len - 1 && !b->opt.preserve_cr && p[0] == '\r' && p[1] == '\n')
             {
@@ -1625,13 +1635,13 @@ int load_fh_in_buffer(buffer *b, int fh)
             else
             {
                 char *q = p;
-                while ((b->opt.binary || *q != terminators[0] && *q != terminators[1]) && *q)
+                while ((b->opt.binary || (*q != terminators[0] && *q != terminators[1])) && *q)
                 {
                     q++;
                 }
 
                 ld->line_len = q - p;
-                ld->line = q - p ? p : NULL;
+                ld->line = (q - p) ? p : NULL;
 
                 if (q - cp->pool < len - 1 && !b->opt.preserve_cr && q[0] == '\r' && q[1] == '\n')
                 {
@@ -1933,15 +1943,15 @@ void auto_save(buffer *b)
         char *p;
         if (b->filename)
         {
-            if (p = malloc(strlen(file_part(b->filename)) + 2))
+            if ((p = malloc(strlen(file_part(b->filename)) + 2)))
             {
                 strcpy(p, "#");
                 strcat(p, file_part(b->filename));
             }
         }
-        else if (p = malloc(MAX_INT_LEN * 2))
+        else if ((p = malloc(MAX_INT_LEN * 2)))
         {
-            sprintf(p, "%p.%x", b, getpid());
+            sprintf(p, "%p.%x", (void *)b, getpid());
         }
         save_buffer_to_file(b, p);
         free(p);

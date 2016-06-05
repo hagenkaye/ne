@@ -168,7 +168,7 @@ int add_to_undo_stream(undo_buffer *const ub, const char *const p, const int64_t
     {
         char *new_stream;
 
-        if (new_stream = realloc(ub->streams, (ub->cur_stream + len + STD_UNDO_STREAM_SIZE)))
+        if ((new_stream = realloc(ub->streams, (ub->cur_stream + len + STD_UNDO_STREAM_SIZE))))
         {
             ub->streams_size = ub->cur_stream + len + STD_UNDO_STREAM_SIZE;
             ub->streams = new_stream;

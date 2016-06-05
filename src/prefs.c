@@ -92,7 +92,7 @@ char *exists_prefs_dir(void)
         home_dir = ".";
     }
 
-    if (prefs_dir = malloc(strlen(home_dir) + strlen(PREFS_DIR) + 3))
+    if ((prefs_dir = malloc(strlen(home_dir) + strlen(PREFS_DIR) + 3)))
     {
 
         strcat(strcat(strcpy(prefs_dir, home_dir), "/"), PREFS_DIR);
@@ -328,7 +328,7 @@ static int do_auto_prefs(buffer *b, const char *ext, int (prefs_func)(buffer *, 
     char *auto_name, *prefs_dir;
     if (*prefs_func == load_prefs && (prefs_dir = exists_gprefs_dir()))
     {
-        if (auto_name = malloc(strlen(ext) + strlen(prefs_dir) + strlen(PREF_FILE_SUFFIX) + 2))
+        if ((auto_name = malloc(strlen(ext) + strlen(prefs_dir) + strlen(PREF_FILE_SUFFIX) + 2)))
         {
             strcat(strcat(strcpy(auto_name, prefs_dir), ext), PREF_FILE_SUFFIX);
             error = prefs_func(b, auto_name);
@@ -339,9 +339,9 @@ static int do_auto_prefs(buffer *b, const char *ext, int (prefs_func)(buffer *, 
     }
 
     /* Try ~/.ne autoprefs */
-    if (prefs_dir = exists_prefs_dir())
+    if ((prefs_dir = exists_prefs_dir()))
     {
-        if (auto_name = malloc(strlen(ext) + strlen(prefs_dir) + strlen(PREF_FILE_SUFFIX) + 2))
+        if ((auto_name = malloc(strlen(ext) + strlen(prefs_dir) + strlen(PREF_FILE_SUFFIX) + 2)))
         {
             strcat(strcat(strcpy(auto_name, prefs_dir), ext), PREF_FILE_SUFFIX);
             error = prefs_func(b, auto_name);
