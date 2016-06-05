@@ -1,29 +1,29 @@
-/* terminfo emulation through GNU termcap definitions.
+/*  terminfo emulation through GNU termcap definitions.
 
-	Copyright (C) 1993-1998 Sebastiano Vigna 
-	Copyright (C) 1999-2015 Todd M. Lewis and Sebastiano Vigna
+    Copyright (C) 1993-1998 Sebastiano Vigna
+    Copyright (C) 1999-2015 Todd M. Lewis and Sebastiano Vigna
 
-	This file is part of ne, the nice editor.
+    This file is part of ne, the nice editor.
 
-	This library is free software; you can redistribute it and/or modify it
-	under the terms of the GNU General Public License as published by
-	the Free Software Foundation; either version 3 of the License, or (at your
-	option) any later version.
+    This library is free software; you can redistribute it and/or modify it
+    under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 3 of the License, or (at your
+    option) any later version.
 
-	This library is distributed in the hope that it will be useful, but
-	WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-	or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
-	for more details.
+    This library is distributed in the hope that it will be useful, but
+    WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+    for more details.
 
-	You should have received a copy of the GNU General Public License
-	along with this program; if not, see <http://www.gnu.org/licenses/>.  */
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, see <http://www.gnu.org/licenses/>.  */
 
 
 #include "termcap.h"
 
 #define ERR -1
 
-extern char *tparm(const char *cap_string,...);
+extern char *tparm(const char *cap_string, ...);
 extern int setupterm(const char *, int, const int *);
 
 extern char *key_up;
@@ -41,7 +41,7 @@ extern char *key_sf;
 extern char *key_sr;
 
 
-	/* Editing keys */
+/* Editing keys */
 
 extern char *key_eol;
 extern char *key_eos;
@@ -54,7 +54,7 @@ extern char *key_eic;
 extern char *key_clear;
 
 
-	/* Keypad keys */
+/* Keypad keys */
 
 extern char *key_a1;
 extern char *key_a3;
@@ -63,14 +63,14 @@ extern char *key_c1;
 extern char *key_c3;
 
 
-	/* Tab keys (never used in the standard configuration) */
+/* Tab keys (never used in the standard configuration) */
 
 extern char *key_catab;
 extern char *key_ctab;
 extern char *key_stab;
 
 
-	/* Function keys */
+/* Function keys */
 
 extern char *key_f0;
 extern char *key_f1;

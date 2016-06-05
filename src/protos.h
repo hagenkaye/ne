@@ -1,22 +1,22 @@
-/* Function prototypes
+/*  Function prototypes
 
-	Copyright (C) 1993-1998 Sebastiano Vigna 
-	Copyright (C) 1999-2015 Todd M. Lewis and Sebastiano Vigna
+    Copyright (C) 1993-1998 Sebastiano Vigna
+    Copyright (C) 1999-2015 Todd M. Lewis and Sebastiano Vigna
 
-	This file is part of ne, the nice editor.
+    This file is part of ne, the nice editor.
 
-	This library is free software; you can redistribute it and/or modify it
-	under the terms of the GNU General Public License as published by
-	the Free Software Foundation; either version 3 of the License, or (at your
-	option) any later version.
+    This library is free software; you can redistribute it and/or modify it
+    under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 3 of the License, or (at your
+    option) any later version.
 
-	This library is distributed in the hope that it will be useful, but
-	WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-	or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
-	for more details.
+    This library is distributed in the hope that it will be useful, but
+    WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+    for more details.
 
-	You should have received a copy of the GNU General Public License
-	along with this program; if not, see <http://www.gnu.org/licenses/>.  */
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, see <http://www.gnu.org/licenses/>.  */
 
 
 #include "term.h"
@@ -25,13 +25,13 @@
 int do_action(buffer *b, action a, int64_t c, char *p);
 
 /* autocomp.c */
-char *autocomplete(char *p, char *req_msg, const int ext, int * const error);
+char *autocomplete(char *p, char *req_msg, const int ext, int *const error);
 
 /* buffer.c */
 encoding_type detect_buffer_encoding(const buffer *b);
 char_pool *alloc_char_pool(int64_t size);
 void free_char_pool(char_pool *cp);
-char_pool *get_char_pool(buffer *b, char * const p);
+char_pool *get_char_pool(buffer *b, char *const p);
 line_desc_pool *alloc_line_desc_pool(int64_t pool_size);
 void free_line_desc_pool(line_desc_pool *ldp);
 buffer *alloc_buffer(const buffer *cur_b);
@@ -58,7 +58,7 @@ int insert_spaces(buffer *b, line_desc *ld, int64_t line, int64_t pos, int64_t n
 int delete_stream(buffer *b, line_desc *ld, int64_t line, int64_t pos, int64_t len);
 int delete_one_char(buffer *b, line_desc *ld, int64_t line, int64_t pos);
 void change_filename(buffer *b, char *name);
-void ensure_attr_buf(buffer * const b, const int64_t capacity);
+void ensure_attr_buf(buffer *const b, const int64_t capacity);
 int load_file_in_buffer(buffer *b, const char *name);
 int load_fh_in_buffer(buffer *b, int fh);
 int save_buffer_to_file(buffer *b, const char *name);
@@ -101,7 +101,7 @@ void optimize_macro(char_stream *cs, bool verbose);
 void update_syntax_states(buffer *b, int row, line_desc *ld, line_desc *end_ld);
 int highlight_cmp(HIGHLIGHT_STATE *x, HIGHLIGHT_STATE *y);
 void delay_update();
-void output_line_desc(int row, int col, line_desc *ld, int64_t start, int64_t len, int tab_size, bool cleared_at_end, bool utf8, const uint32_t * const attr, const uint32_t * const diff, const int64_t diff_size);
+void output_line_desc(int row, int col, line_desc *ld, int64_t start, int64_t len, int tab_size, bool cleared_at_end, bool utf8, const uint32_t *const attr, const uint32_t *const diff, const int64_t diff_size);
 line_desc *update_partial_line(buffer *b, int n, int64_t start_x, bool cleared_at_end, const bool differential);
 void update_line(buffer *b, int n, const bool cleared_at_end, const bool differential);
 void update_window_lines(buffer *b, int start_line, int end_line, bool doit);
@@ -114,18 +114,18 @@ void reset_window(void);
 void refresh_window(buffer *b);
 void scroll_window(buffer *b, int line, int n);
 HIGHLIGHT_STATE freeze_attributes(buffer *b, line_desc *ld);
-void automatch_bracket(buffer * const b, const bool show);
+void automatch_bracket(buffer *const b, const bool show);
 
 /* edit.c */
 int to_upper(buffer *b);
 int to_lower(buffer *b);
 int capitalize(buffer *b);
 int match_bracket(buffer *b);
-int find_matching_bracket(buffer *b, const int64_t min_line, const int64_t max_line, int64_t *match_line, int64_t *match_pos, int *c, line_desc ** ld);
+int find_matching_bracket(buffer *b, const int64_t min_line, const int64_t max_line, int64_t *match_line, int64_t *match_pos, int *c, line_desc **ld);
 int word_wrap(buffer *b);
 int paragraph(buffer *b);
 int center(buffer *b);
-int auto_indent_line(buffer * const b, const int64_t line, line_desc * const ld, const int64_t up_to_col);
+int auto_indent_line(buffer *const b, const int64_t line, line_desc *const ld, const int64_t up_to_col);
 int backtab(buffer *b);
 int shift(buffer *b, char *p, char *msg, int msg_size);
 
@@ -141,7 +141,7 @@ void free_list(list *l, void (func)());
 void apply_to_list(list *l, void (func)());
 
 /* ext.c */
-const char *ext2syntax(const char * const ext);
+const char *ext2syntax(const char *const ext);
 
 /* help.c */
 
@@ -151,7 +151,7 @@ const char *ext2syntax(const char * const ext);
 void read_key_capabilities(void);
 void set_escape_time(int new_escape_time);
 int get_key_code(void);
-int key_may_set(const char * const cap_string, int code);
+int key_may_set(const char *const cap_string, int code);
 
 /* menu.c */
 void print_message(const char *message);
@@ -190,7 +190,7 @@ void move_to_eol(buffer *b);
 void move_to_sof(buffer *b);
 void move_to_sol(buffer *b);
 void reset_position_to_sof(buffer *b);
-void resync_pos(buffer * const b);
+void resync_pos(buffer *const b);
 void toggle_sof_eof(buffer *b);
 void toggle_sol_eol(buffer *b);
 int  search_word(buffer *b, int dir);
@@ -225,17 +225,17 @@ char *request_string(const char *prompt, const char *default_string, bool accept
 char *request(const char *prompt, const char *default_string, bool alpha_allowed, int completion_type, bool prefer_utf8);
 
 /* request.c */
-int   request_strings(req_list * const rl, int default_entry);
+int   request_strings(req_list *const rl, int default_entry);
 char *request_syntax();
 char *request_files(const char *filename, bool use_prefix);
 char *request_file(const buffer *b, const char *prompt, const char *default_name);
 int   request_document(void);
 char *complete_filename(const char *start_prefix);
 /* int   req_list_del(req_list * const rl, int nth); */
-void  req_list_free(req_list * const rl);
-int   req_list_init(req_list * const rl, int cmpfnc(const char *, const char *), const bool allow_dupes, const bool allow_reorder, const char suffix);
-char *req_list_add(req_list * const rl, char * const str, const int suffix);
-void  req_list_finalize(req_list * const rl);
+void  req_list_free(req_list *const rl);
+int   req_list_init(req_list *const rl, int cmpfnc(const char *, const char *), const bool allow_dupes, const bool allow_reorder, const char suffix);
+char *req_list_add(req_list *const rl, char *const str, const int suffix);
+void  req_list_finalize(req_list *const rl);
 
 
 /* search.c */
@@ -275,7 +275,7 @@ const char *get_global_dir(void);
 const char *tilde_expand(const char *filename);
 const char *file_part(const char *pathname);
 unsigned long file_mod_time(const char *filename);
-int64_t read_safely(const int fh, void * const buf, const int64_t len);
+int64_t read_safely(const int fh, void *const buf, const int64_t len);
 bool buffer_file_modified(const buffer *b, const char *name);
 char *str_dup(const char *s);
 int64_t strnlen_ne(const char *s, int64_t n);
@@ -287,10 +287,10 @@ int filenamecmp(const char *a, const char *b);
 void set_interactive_mode(void);
 void unset_interactive_mode(void);
 int64_t calc_width(const line_desc *ld, int64_t n, int tab_size, encoding_type encoding);
-int64_t calc_width_hint(const line_desc * const ld, const int64_t n, const int tab_size, const encoding_type encoding, const int64_t cur_pos, const int64_t cur_width);
+int64_t calc_width_hint(const line_desc *const ld, const int64_t n, const int tab_size, const encoding_type encoding, const int64_t cur_pos, const int64_t cur_width);
 int64_t calc_char_len(const line_desc *ld, encoding_type encoding);
 int64_t calc_pos(const line_desc *ld, int64_t n, int tab_size, encoding_type encoding);
-int get_string_width(const char * const s, const int64_t len, const encoding_type encoding);
+int get_string_width(const char *const s, const int64_t len, const encoding_type encoding);
 int max_prefix(const char *s, const char *t);
 bool is_prefix(const char *p, const char *s);
 bool is_migrated(const char *name);
@@ -306,7 +306,7 @@ encoding_type detect_encoding(const char *s, int64_t len);
 int64_t next_pos(const char *s, int64_t pos, encoding_type encoding);
 int64_t prev_pos(const char *s, int64_t pos, encoding_type encoding);
 int get_char(const char *s, encoding_type encoding);
-int get_char_width(const char * const s, const encoding_type encoding);
+int get_char_width(const char *const s, const encoding_type encoding);
 bool ne_ispunct(const int c, const int encoding);
 bool ne_isspace(const int c, const int encoding);
 bool ne_isword(const int c, const int encoding);
